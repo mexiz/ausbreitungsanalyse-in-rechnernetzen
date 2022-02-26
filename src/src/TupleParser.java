@@ -28,6 +28,7 @@ public class TupleParser {
                 if (ip.charAt(ip.length() - 2) != ')') {
                     ip = ip.substring(0, ip.length() - 1);
                     table.add(new Tuple<>(new IP(root), new IP(ip)));
+                    
                     splitted.remove(i);
                 }
             } else {
@@ -39,7 +40,7 @@ public class TupleParser {
         return table;
     }
 
-    private int findBracketClosed(List<String> list, int start) {
+    private int indexBracketClosed(List<String> list, int start) {
 
         int openBracket = 0;
         int closedBracket = 0;
