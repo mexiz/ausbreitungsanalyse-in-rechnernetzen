@@ -22,6 +22,7 @@ public class JunitTest {
         assertEquals(new IP("255.255.255.255").toString(), "255.255.255.255");
         assertEquals(new IP("34.49.145.239").toString(), "34.49.145.239");
         assertThrows(ParseException.class, () -> new IP("256.256.256.256"));
+        assertThrows(ParseException.class, () -> new IP(".255.255.255"));
         assertThrows(ParseException.class, () -> new IP("00.00.00.001"));
         assertThrows(ParseException.class, () -> new IP("255.255.255.255.255"));
         assertThrows(ParseException.class, () -> new IP("a.a.a.a"));

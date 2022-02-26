@@ -1,22 +1,21 @@
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class TupleTable {
 
-    List<Tuple<String>> table = new ArrayList<>();
-    TupleParser parser = new TupleParser();
-    String root;
+    List<Tuple<IP>> table;
+    TupleParser parser;
 
-    public void add(String ip1, String ip2) {
-        table.add(new Tuple<>(ip1, ip2));
+    public TupleTable(String bracketNotation) throws ParseException {
+        parser = new TupleParser();
+        this.table = parser.getTuple(bracketNotation);
     }
 
-    // TEST
-
-    public void test() {
-        for (Tuple<String> con : table) {
-            System.out.println(con.connection());
-        }
+    public void mergeTupleTable(TupleTable mergeTable) {
+        this.table.addAll(mergeTable.getTable());
     }
+
+    public List<Tuple<IP>> getTable() {
+        return table;
+    }
+
 }

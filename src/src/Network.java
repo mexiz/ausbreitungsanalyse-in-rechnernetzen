@@ -8,7 +8,7 @@ public class Network {
     }
 
     public Network(final String bracketNotation) throws ParseException {
-        connetionTable = new TupleTable();
+        connetionTable = new TupleTable(bracketNotation);
     }
 
     public boolean add(final Network subnet) {

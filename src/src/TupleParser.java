@@ -11,8 +11,9 @@ import java.util.List;
 
 public class TupleParser {
 
-    private String regexByte = "(((2[0-5][0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]\\d)|([1-9])|(0)))";
+    private String regexByte = "(((2[0-5][0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]\\d)|([0-9])))";
     private String regexIP = "\\b(" + regexByte + "\\.){3}" + regexByte + "\\b";
+
     private static final String SEPARATOR_IP = " ";
 
     /**
@@ -24,7 +25,8 @@ public class TupleParser {
      * @throws ParseException Wenn die Bracketnotation- oder die Adressenform nicht richtig ist
      */
     
-    public List<Tuple<IP>> getTree(final String bracketNotation) throws ParseException {
+    public List<Tuple<IP>> getTuple(final String bracketNotation) throws ParseException {
+
         //Entfernt die äußerste Klammer
         String bracket = bracketNotation.substring(1, bracketNotation.length() - 1);
         List<String> splitted = new ArrayList<>(Arrays.asList(bracket.split(SEPARATOR_IP)));
@@ -40,7 +42,7 @@ public class TupleParser {
                 int end = this.indexBracketClosed(splitted, i);
 
                 // Rekursion um eine Ebene tiefer in den Graphen zu kommen
-                List<Tuple<IP>> supTuples = this.getTree(this.toString(splitted, i, end));
+                List<Tuple<IP>> supTuples = this.getTuple(this.toString(splitted, i, end));
                 table.addAll(supTuples);
 
                 // Löscht die Subliste
@@ -78,7 +80,6 @@ public class TupleParser {
                 openBracket++;
                 ip = ip.substring(1);
             }
-
             ip = ip.replaceAll(regexIP, "");
             closedBracket += ip.length();
             i++;
