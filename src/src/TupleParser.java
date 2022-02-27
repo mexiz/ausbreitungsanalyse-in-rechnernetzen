@@ -3,7 +3,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Die Parser für die Umformung von der Bracketnotation in die Tupel Notation und umgekehrt.
+ * Die Parser für die Umformung von der Bracketnotation in die Tupel Notation
+ * und umgekehrt.
  * 
  * @author uwlhp
  * @version 1.0
@@ -13,7 +14,7 @@ public class TupleParser {
 
     private String regexByte = "(((2[0-5][0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]\\d)|([0-9])))";
     private String regexIP = "(" + regexByte + "\\.){3}" + regexByte;
-    private String regexBracket = "[(]" + regexIP + "(\\s"+ regexIP  +")*" + "[)]";
+    private String regexBracket = "[(]" + regexIP + "(\\s" + regexIP + ")*" + "[)]";
 
     private static final String SEPARATOR_IP = " ";
 
@@ -23,17 +24,17 @@ public class TupleParser {
      * 
      * @param bracketNotation Der Baum als Bracketnotation
      * @return Gibt eine List von Tupeln zurück
-     * @throws ParseException Wenn die Bracketnotation- oder die Adressenform nicht richtig ist
+     * @throws ParseException Wenn die Bracketnotation- oder die Adressenform nicht
+     *                        richtig ist
      */
-    
+
     public List<Tuple<IP>> getTuple(final String bracketNotation) throws ParseException {
 
-        //Entfernt die äußerste Klammer
+        // Entfernt die äußerste Klammer
         String bracket = bracketNotation.substring(1, bracketNotation.length() - 1);
         List<String> splitted = new ArrayList<>(Arrays.asList(bracket.split(SEPARATOR_IP)));
         getAdresses(bracketNotation);
         List<Tuple<IP>> table = new ArrayList<>();
-
 
         String root = splitted.get(0);
         int i = 1;
@@ -63,12 +64,14 @@ public class TupleParser {
         return table;
     }
 
-
-    private List<IP> getAdresses(String bracketNotation) throws ParseException{
-        String withoutBrackets = bracketNotation.replace("\\(", "");
-        withoutBrackets = withoutBrackets.replace("\\)", "");
+    private List<IP> getAdresses(String bracketNotation) throws ParseException {
+        String withoutBrackets = bracketNotation.replace("(", "");
+        withoutBrackets = withoutBrackets.replace(")", "");
+        if(!withoutBrackets.matches("(" + regexIP + "\\s)*" + regexIP)){
+            throw new ParseException("Error: Invalid Bracketnotation Form");
+        }
         String[] splitted = withoutBrackets.split(" ");
-        List<IP> returnList= new ArrayList<>();
+        List<IP> returnList = new ArrayList<>();
         for (String string : splitted) {
             returnList.add(new IP(string));
         }
@@ -78,7 +81,8 @@ public class TupleParser {
     /**
      * Die Hilfsmethode gibt den Index zurück, wo sich der Substrang vom Baum
      * schließt.
-     * @param list Die Liste mit den Addressen von der Bracketnotation  
+     * 
+     * @param list  Die Liste mit den Addressen von der Bracketnotation
      * @param start Der Startwert, wo der Substrang begonnen hat
      * @return git den Index zurück
      */
@@ -105,10 +109,12 @@ public class TupleParser {
     }
 
     /**
-     * Die Hilfsmethode verbindet die durch den {@link TupleParser#SEPARATOR_IP}  getrennte Liste zusammen.
-     * @param list Die durch ein {@link TupleParser#SEPARATOR_IP} getrennte Liste 
+     * Die Hilfsmethode verbindet die durch den {@link TupleParser#SEPARATOR_IP}
+     * getrennte Liste zusammen.
+     * 
+     * @param list  Die durch ein {@link TupleParser#SEPARATOR_IP} getrennte Liste
      * @param start Startwert der Liste
-     * @param end Endwert der Liste
+     * @param end   Endwert der Liste
      * @return Gibt den zusammengesetzten String zurück
      */
 

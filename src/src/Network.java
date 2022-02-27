@@ -1,6 +1,5 @@
 import java.util.List;
 
-
 public class Network {
     private TupleTable connetionTable;
 

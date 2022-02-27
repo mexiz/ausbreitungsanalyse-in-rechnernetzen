@@ -3,6 +3,7 @@ import java.util.List;
 public class TupleTable {
 
     List<Tuple<IP>> table;
+    List<IP> ipTable;
     TupleParser parser;
 
     public TupleTable(String bracketNotation) throws ParseException {
