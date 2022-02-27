@@ -12,7 +12,8 @@ import java.util.List;
 public class TupleParser {
 
     private String regexByte = "(((2[0-5][0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]\\d)|([0-9])))";
-    private String regexIP = "\\b(" + regexByte + "\\.){3}" + regexByte + "\\b";
+    private String regexIP = "(" + regexByte + "\\.){3}" + regexByte;
+    private String regexBracket = "[(]" + regexIP + "(\\s"+ regexIP  +")*" + "[)]";
 
     private static final String SEPARATOR_IP = " ";
 
@@ -30,7 +31,10 @@ public class TupleParser {
         //Entfernt die äußerste Klammer
         String bracket = bracketNotation.substring(1, bracketNotation.length() - 1);
         List<String> splitted = new ArrayList<>(Arrays.asList(bracket.split(SEPARATOR_IP)));
+        getAdresses(bracketNotation);
         List<Tuple<IP>> table = new ArrayList<>();
+
+
         String root = splitted.get(0);
         int i = 1;
 
@@ -57,6 +61,18 @@ public class TupleParser {
             }
         }
         return table;
+    }
+
+
+    private List<IP> getAdresses(String bracketNotation) throws ParseException{
+        String withoutBrackets = bracketNotation.replace("\\(", "");
+        withoutBrackets = withoutBrackets.replace("\\)", "");
+        String[] splitted = withoutBrackets.split(" ");
+        List<IP> returnList= new ArrayList<>();
+        for (String string : splitted) {
+            returnList.add(new IP(string));
+        }
+        return returnList;
     }
 
     /**
