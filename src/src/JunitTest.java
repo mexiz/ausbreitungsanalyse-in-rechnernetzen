@@ -52,8 +52,23 @@ public class JunitTest {
 
     @Test
     @RepeatedTest(1)
-    void testGetTree() {
-
+    void getHeight() throws ParseException {
+        Graph table;
+        table = new Graph("(1.0.0.0 (2.0.0.0 (4.0.0.0 3.0.0.0) 10.0.0.0) 8.0.0.0)");
+        assertEquals(table.getHeight(new IP("1.0.0.0")), 4);
+        table = new Graph("(1.0.0.0 (2.0.0.0 (4.0.0.0 3.0.0.0 (5.0.0.0 6.0.0.0))))");
+        assertEquals(table.getHeight(new IP("1.0.0.0")), 5);
+        table = new Graph("(1.0.0.0 (2.0.0.0 (4.0.0.0 3.0.0.0)))");
+        assertEquals(table.getHeight(new IP("1.0.0.0")), 4);
+        table = new Graph("(1.0.0.0 (2.0.0.0 (4.0.0.0 (5.0.0.0 6.0.0.0))))");
+        assertEquals(table.getHeight(new IP("1.0.0.0")), 5);
+        table = new Graph("(1.0.0.0 9.0.0.0 (2.0.0.0 8.0.0.0 (4.0.0.0 7.0.0.0 (5.0.0.0 6.0.0.0))))");
+        assertEquals(table.getHeight(new IP("1.0.0.0")), 5);
+        table = new Graph("(1.0.0.0 (2.0.0.0 (4.0.0.0 (5.0.0.0 (10.0.0.0 11.0.0.0)))))");
+        assertEquals(table.getHeight(new IP("1.0.0.0")), 6);
+        table = new Graph("(1.0.0.0 (22.0.0.0 (24.0.0.0 (25.0.0.0 211.0.0.0))) (2.0.0.0 (4.0.0.0 11.0.0.0)))");
+        assertEquals(table.getHeight(new IP("1.0.0.0")), 5);
+        
     }
-
+    
 }

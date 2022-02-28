@@ -30,12 +30,12 @@ public class TupleParser {
      *                        richtig ist
      */
 
-    public List<Tuple<IP>> getTuple(final String bracketNotation) throws ParseException {
+    public List<Edge> getTuple(final String bracketNotation) throws ParseException {
 
         // Entfernt die äußerste Klammer
         String bracket = bracketNotation.substring(1, bracketNotation.length() - 1);
         List<String> splitted = new ArrayList<>(Arrays.asList(bracket.split(SEPARATOR_IP)));
-        List<Tuple<IP>> table = new ArrayList<>();
+        List<Edge> table = new ArrayList<>();
 
         String root = splitted.get(0);
         int i = 1;
@@ -44,21 +44,21 @@ public class TupleParser {
         while (i < splitted.size()) {
             String ip = splitted.get(i);
             if (ip.charAt(0) == '(') {
-                table.add(new Tuple<>(new IP(root), new IP(ip.substring(1))));
+                table.add(new Edge(new IP(root), new IP(ip.substring(1))));
                 int end = this.indexBracketClosed(splitted, i);
 
                 // Rekursion um eine Ebene tiefer in den Graphen zu kommen
-                List<Tuple<IP>> supTuples = this.getTuple(this.toString(splitted, i, end));
+                List<Edge> supTuples = this.getTuple(this.toString(splitted, i, end));
                 table.addAll(supTuples);
 
                 // Löscht die Subliste
                 splitted.subList(i, end).clear();
             } else if (ip.charAt(ip.length() - 1) == ')') {
                 ip = ip.substring(0, ip.length() - 1);
-                table.add(new Tuple<>(new IP(root), new IP(ip)));
+                table.add(new Edge(new IP(root), new IP(ip)));
                 splitted.remove(i);
             } else {
-                table.add(new Tuple<>(new IP(root), new IP(ip)));
+                table.add(new Edge(new IP(root), new IP(ip)));
                 splitted.remove(i);
             }
         }
@@ -73,7 +73,7 @@ public class TupleParser {
      * @throws ParseException Wenn die Bracketnotation- oder die Adressenform nicht
      *                        richtig ist
      */
-    
+
     public List<IP> getAdresses(String bracketNotation) throws ParseException {
         String withoutBrackets = bracketNotation.replace("(", "");
         withoutBrackets = withoutBrackets.replace(")", "");
