@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Die Parser für die Umformung von der Bracketnotation in die Tupel Notation
@@ -14,7 +16,7 @@ public class TupleParser {
 
     private String regexByte = "(((2[0-5][0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]\\d)|([0-9])))";
     private String regexIP = "(" + regexByte + "\\.){3}" + regexByte;
-    private String regexBracket = "[(]" + regexIP + "(\\s" + regexIP + ")+" + "[)]";
+    private String regexBracket = "[(]" + regexIP + "(\\s" + regexIP + ")" + "[)]";
 
     private static final String SEPARATOR_IP = " ";
 
@@ -33,7 +35,6 @@ public class TupleParser {
         // Entfernt die äußerste Klammer
         String bracket = bracketNotation.substring(1, bracketNotation.length() - 1);
         List<String> splitted = new ArrayList<>(Arrays.asList(bracket.split(SEPARATOR_IP)));
-        getAdresses(bracketNotation);
         List<Tuple<IP>> table = new ArrayList<>();
 
         String root = splitted.get(0);
@@ -64,16 +65,29 @@ public class TupleParser {
         return table;
     }
 
-    private List<IP> getAdresses(String bracketNotation) throws ParseException {
+    /**
+     * Die Methode gibt alle Adressen die in der Bracketnotation drinnen sind aus
+     * 
+     * @param bracketNotation Der Baum als Bracketnotation
+     * @return Gibt eine List von IPs zurück
+     * @throws ParseException Wenn die Bracketnotation- oder die Adressenform nicht
+     *                        richtig ist
+     */
+    
+    public List<IP> getAdresses(String bracketNotation) throws ParseException {
         String withoutBrackets = bracketNotation.replace("(", "");
         withoutBrackets = withoutBrackets.replace(")", "");
-        if(!withoutBrackets.matches("(" + regexIP + "\\s)*" + regexIP)){
+        if (!withoutBrackets.matches("(" + regexIP + "\\s)*" + regexIP)) {
             throw new ParseException("Error: Invalid Bracketnotation Form");
         }
         String[] splitted = withoutBrackets.split(" ");
         List<IP> returnList = new ArrayList<>();
-        for (String string : splitted) {
-            returnList.add(new IP(string));
+        Set<String> duplicatTester = new HashSet<>();
+        for (String adress : splitted) {
+            if (!duplicatTester.add(adress)) {
+                throw new ParseException("Error: Tree is circle");
+            }
+            returnList.add(new IP(adress));
         }
         return returnList;
     }

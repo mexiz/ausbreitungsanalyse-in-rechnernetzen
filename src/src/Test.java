@@ -1,20 +1,13 @@
-import java.util.ArrayList;
-import java.util.List;
 
 public class Test {
 
-    private static String regexByte = "(((2[0-5][0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]\\d)|([0-9])))";
-    private static String regexIP = "(" + regexByte + "\\.){3}" + regexByte;
-
-    private static String regexSPACE = "(" + regexIP + "\\s)*" + regexIP;
-
     public static void main(String[] args) throws ParseException {
 
-        String ip = "(85.193.148.81 85.193.148.81)";
+        String bracketNotation = "(1.0.0.0 2.0.0.0 (3.0.0.0 (1.0.0.0 4.0.0.0)))";
 
-        String regexBracket = "[(]" + regexIP + "(\\s" + regexIP + ")+" + "[)]";
-        System.out.println(ip.matches(regexBracket));
-        
+        TupleTable table = new TupleTable(bracketNotation);
+        table.getTable();
+      
     }
 
 
