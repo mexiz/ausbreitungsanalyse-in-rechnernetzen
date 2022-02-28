@@ -1,5 +1,3 @@
-import static org.junit.jupiter.api.DynamicTest.stream;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +10,10 @@ public class Test {
 
     public static void main(String[] args) throws ParseException {
 
-        String ip = "(85.193.148.81 85.193.148.81 (85.193.148.81 (85.193.148.81 85.193.148.81)))";
+        String ip = "(85.193.148.81 85.193.148.81)";
+
+        String regexBracket = "[(]" + regexIP + "(\\s" + regexIP + ")+" + "[)]";
+        System.out.println(ip.matches(regexBracket));
         
     }
 
