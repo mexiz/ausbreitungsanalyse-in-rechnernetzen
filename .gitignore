@@ -24,7 +24,7 @@ local.properties
 .loadpath
 .recommenders
 *.pdf
-/src/JunitTest.java
+/JunitTest.java
 
 # Eclipse Core
 #.project
