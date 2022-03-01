@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 public class JunitTest {
 
     @Test
-    @DisplayName("HELLO")
+    @DisplayName("")
     @RepeatedTest(1)
     void simpleIP() throws ParseException {
 
