@@ -10,6 +10,7 @@ build
 testing/
 checkstyle/
 *.pdf
+.vscode/
 
 #################
 # Eclipse .gitignore
