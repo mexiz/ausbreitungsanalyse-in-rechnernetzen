@@ -8,18 +8,13 @@ public class Graph {
 
     List<Edge> table;
     List<IP> nodes;
-    IP root;
 
     public Graph(String bracketNotation) throws ParseException {
         TupleParser parser = new TupleParser();
         this.table = parser.getTuple(bracketNotation);
         this.nodes = parser.getAdresses(bracketNotation);
         isCircle(nodes);
-        root = nodes.get(0);
         Collections.sort(nodes);
-        for (IP ip : nodes) {
-            System.out.println(ip.toString());
-        }
     }
 
     public Graph(final IP root, final List<IP> children) {
@@ -44,20 +39,16 @@ public class Graph {
         this.table.addAll(mergeTable.getTable());
     }
 
-    public int getHeight(IP root) {
+    public int getHeight(IP root, IP parentIp) {
         int maxHeight = 0;
-        List<Edge> children = new ArrayList<>();
-        for (Edge e : this.table) {
-            if (e.contains(root)) {
-                children.add(e);
-            }
-        }
+        List<Edge> children = getChildren(root, parentIp);
+
         if (children.isEmpty()) {
             return 1;
         } else {
             int prevEdge = 0;
             for (Edge e : children) {
-                int edgeHeight = getHeight(e.getY());
+                int edgeHeight = getHeight(e.getY(), e.getX());
                 edgeHeight += maxHeight;
                 if (edgeHeight >= prevEdge) {
                     prevEdge = edgeHeight;
@@ -66,6 +57,20 @@ public class Graph {
             return prevEdge + 1;
         }
     }
+
+
+    public List<Edge> getChildren(IP parent, IP parentIp) {
+        List<Edge> children = new ArrayList<>();
+
+        for (Edge e : this.table) {
+            if (e.xContains(parent) && !e.yContains(parentIp)) {
+                children.add(e);
+            }
+        }
+        return children;
+    }
+
+
 
     public List<Edge> getTable() {
         return table;

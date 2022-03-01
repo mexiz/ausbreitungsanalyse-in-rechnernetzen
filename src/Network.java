@@ -55,7 +55,7 @@ public class Network {
      */
 
     public int getHeight(final IP root) {
-        return graph.getHeight(root);
+        return graph.getHeight(root, null);
     }
 
     // WICHTIG

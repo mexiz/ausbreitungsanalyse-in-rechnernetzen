@@ -45,6 +45,7 @@ public class TupleParser {
             String ip = splitted.get(i);
             if (ip.charAt(0) == '(') {
                 table.add(new Edge(new IP(root), new IP(ip.substring(1))));
+                table.add(new Edge(new IP(ip.substring(1)) , new IP(root)));
                 int end = this.indexBracketClosed(splitted, i);
 
                 // Rekursion um eine Ebene tiefer in den Graphen zu kommen
@@ -56,9 +57,11 @@ public class TupleParser {
             } else if (ip.charAt(ip.length() - 1) == ')') {
                 ip = ip.substring(0, ip.length() - 1);
                 table.add(new Edge(new IP(root), new IP(ip)));
+                table.add(new Edge(new IP(ip) , new IP(root)));
                 splitted.remove(i);
             } else {
                 table.add(new Edge(new IP(root), new IP(ip)));
+                table.add(new Edge(new IP(ip) , new IP(root)));
                 splitted.remove(i);
             }
         }
