@@ -1,21 +1,25 @@
 import java.util.List;
 
 public class Network {
+
     private Graph graph;
 
     /**
      * Konstruktor um ein Netzwerk mit nur einem Level zuerzeugen
      * 
-     * @param root     Wurzel des Baum
+     * @param root     Wurzel des Baumes
      * @param children Die Knoten
      */
 
     public Network(final IP root, final List<IP> children) {
-        graph = new Graph(root, children);
+        graph.setNodes(children);
+        for (IP childrenAdress : children) {
+            graph.addEdge(new Edge(root, childrenAdress));
+        }
     }
 
     /**
-     * Konstruktior um ein Netzwerk anhand der Bracketnotation zuerzeugen
+     * Konstruktor um ein Netzwerk anhand der Bracketnotation zuerzeugen
      * 
      * @param bracketNotation Der Baum als Bracketnotation
      * @throws ParseException Wenn die Bracketnotation nicht in der richtigen Form
@@ -23,7 +27,9 @@ public class Network {
      */
 
     public Network(final String bracketNotation) throws ParseException {
-        graph = new Graph(bracketNotation);
+        GraphParser parser = new GraphParser();
+        graph.setEdges(parser.getEdges(bracketNotation));
+        graph.setNodes(parser.getNodes(bracketNotation));
     }
 
     /**
@@ -33,7 +39,7 @@ public class Network {
      */
 
     public List<IP> list() {
-        return graph.getList();
+        return graph.getNodes();
     }
 
     /**
@@ -44,7 +50,8 @@ public class Network {
      */
 
     public boolean contains(final IP ip) {
-        return graph.checkIP(ip);
+        Algo algo = new Algo(graph);
+        return algo.checkIP(ip);
     }
 
     /**
@@ -55,14 +62,23 @@ public class Network {
      */
 
     public int getHeight(final IP root) {
-        return graph.getHeight(root, null);
+        Algo algo = new Algo(graph);
+        return algo.getHeight(root, null);
+    }
+
+    /**
+     * Gibt die Level des Baumes zurück
+     * 
+     * @param root Wuzel des Baumes
+     * @return die Level als Liste einer Liste
+     */
+
+    public List<List<IP>> getLevels(final IP root) {
+        Algo algo = new Algo(graph);
+        return algo.getLevels(root);
     }
 
     // WICHTIG
-
-    public List<List<IP>> getLevels(final IP root) {
-        return null;
-    }
 
     public List<IP> getRoute(final IP start, final IP end) {
         return null;
@@ -83,4 +99,5 @@ public class Network {
     public boolean disconnect(final IP ip1, final IP ip2) {
         return false;
     }
+
 }

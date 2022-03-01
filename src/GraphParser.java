@@ -12,7 +12,7 @@ import java.util.Set;
  * @version 1.0
  */
 
-public class TupleParser {
+public class GraphParser {
 
     private String regexByte = "(((2[0-5][0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]\\d)|([0-9])))";
     private String regexIP = "(" + regexByte + "\\.){3}" + regexByte;
@@ -30,7 +30,7 @@ public class TupleParser {
      *                        richtig ist
      */
 
-    public List<Edge> getTuple(final String bracketNotation) throws ParseException {
+    public List<Edge> getEdges(final String bracketNotation) throws ParseException {
 
         // Entfernt die äußerste Klammer
         String bracket = bracketNotation.substring(1, bracketNotation.length() - 1);
@@ -49,7 +49,7 @@ public class TupleParser {
                 int end = this.indexBracketClosed(splitted, i);
 
                 // Rekursion um eine Ebene tiefer in den Graphen zu kommen
-                List<Edge> supTuples = this.getTuple(this.toString(splitted, i, end));
+                List<Edge> supTuples = this.getEdges(this.toString(splitted, i, end));
                 table.addAll(supTuples);
 
                 // Löscht die Subliste
@@ -77,7 +77,7 @@ public class TupleParser {
      *                        richtig ist
      */
 
-    public List<IP> getAdresses(String bracketNotation) throws ParseException {
+    public List<IP> getNodes(String bracketNotation) throws ParseException {
         String withoutBrackets = bracketNotation.replace("(", "");
         withoutBrackets = withoutBrackets.replace(")", "");
         if (!withoutBrackets.matches("(" + regexIP + "\\s)*" + regexIP)) {
@@ -126,10 +126,10 @@ public class TupleParser {
     }
 
     /**
-     * Die Hilfsmethode verbindet die durch den {@link TupleParser#SEPARATOR_IP}
+     * Die Hilfsmethode verbindet die durch den {@link GraphParser#SEPARATOR_IP}
      * getrennte Liste zusammen.
      * 
-     * @param list  Die durch ein {@link TupleParser#SEPARATOR_IP} getrennte Liste
+     * @param list  Die durch ein {@link GraphParser#SEPARATOR_IP} getrennte Liste
      * @param start Startwert der Liste
      * @param end   Endwert der Liste
      * @return Gibt den zusammengesetzten String zurück
