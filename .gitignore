@@ -7,6 +7,8 @@ build
 *.jar
 *.war
 *.ear
+JunitTest.java
+*.pdf
 
 #################
 # Eclipse .gitignore
@@ -23,8 +25,8 @@ local.properties
 .settings/
 .loadpath
 .recommenders
-*.pdf
-/JunitTest.java
+
+
 
 # Eclipse Core
 #.project
