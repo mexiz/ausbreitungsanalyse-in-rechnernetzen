@@ -1,0 +1,3 @@
+{
+    "java.checkstyle.configuration": "${workspaceFolder}\\requiredCheckstyleRules_Final_829.xml"
+}

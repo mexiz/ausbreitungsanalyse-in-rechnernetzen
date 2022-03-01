@@ -58,19 +58,40 @@ public class Graph {
         }
     }
 
+    public List<List<IP>> getLevels(IP root) {
+        List<List<IP>> all = new ArrayList<>();
+        List<Edge> children = getChildren(root, null);
+        List<Edge> grandkids = new ArrayList<>();
+        List<IP> currentLevel = new ArrayList<>();
+        currentLevel.add(root);
+        all.add( new ArrayList<>(currentLevel));
+        while (!children.isEmpty()) {
+            currentLevel.clear();
+            for (Edge child : children) {
+                currentLevel.add(child.getY());
+                for (Edge grandChild : getChildren(child.getY(), child.getX())) {
+                    grandkids.add(grandChild);
+                }
+            }
+           
+            children = new ArrayList<>(grandkids);
+            grandkids.clear();
+            all.add( new ArrayList<>(currentLevel));
+        }
+        return all;
+    }
 
-    public List<Edge> getChildren(IP parent, IP parentIp) {
+
+    public List<Edge> getChildren(IP parent, IP prevIP) {
         List<Edge> children = new ArrayList<>();
 
         for (Edge e : this.table) {
-            if (e.xContains(parent) && !e.yContains(parentIp)) {
+            if (e.xContains(parent) && !e.yContains(prevIP)) {
                 children.add(e);
             }
         }
         return children;
     }
-
-
 
     public List<Edge> getTable() {
         return table;

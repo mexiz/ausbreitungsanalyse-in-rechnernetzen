@@ -16,7 +16,8 @@ public class Test {
         System.out.println(table.getHeight(new IP("1.0.0.0"), null));
         table.getTable();
 
+        table.getLevels(new IP("1.0.0.0"));
+
     }
-    
 
 }
