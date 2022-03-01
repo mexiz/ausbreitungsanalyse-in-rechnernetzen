@@ -16,7 +16,7 @@ public class TupleParser {
 
     private String regexByte = "(((2[0-5][0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]\\d)|([0-9])))";
     private String regexIP = "(" + regexByte + "\\.){3}" + regexByte;
-    private String regexBracket = "[(]" + regexIP + "(\\s" + regexIP + ")" + "[)]";
+    private String regexBracket = "[(]" + regexIP + "(\\s" + regexIP + ")*" + "[)]";
 
     private static final String SEPARATOR_IP = " ";
 

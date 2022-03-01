@@ -7,7 +7,7 @@ build
 *.jar
 *.war
 *.ear
-JunitTest.java
+/JunitTest.java
 *.pdf
 
 #################
