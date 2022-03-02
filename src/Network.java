@@ -1,8 +1,7 @@
 import java.util.List;
 
 public class Network {
-
-    public Graph graph;
+    private Graph graph;
 
     /**
      * Konstruktor um ein Netzwerk mit nur einem Level zuerzeugen
@@ -12,10 +11,7 @@ public class Network {
      */
 
     public Network(final IP root, final List<IP> children) {
-        graph.setNodes(children);
-        for (IP childrenAdress : children) {
-            graph.addEdge(new Edge(root, childrenAdress));
-        }
+        graph = new Graph(root, children);
     }
 
     /**
@@ -27,10 +23,7 @@ public class Network {
      */
 
     public Network(final String bracketNotation) throws ParseException {
-        GraphParser parser = new GraphParser();
-        graph = new Graph();
-        graph.setEdges(parser.getEdges(bracketNotation));
-        graph.setNodes(parser.getNodes(bracketNotation));
+        graph = new Graph(bracketNotation);
     }
 
     /**
@@ -40,7 +33,7 @@ public class Network {
      */
 
     public List<IP> list() {
-        return graph.getNodes();
+        return null;
     }
 
     /**
@@ -51,8 +44,7 @@ public class Network {
      */
 
     public boolean contains(final IP ip) {
-        Algo algo = new Algo(graph);
-        return algo.checkIP(ip);
+        return graph.checkIP(ip);
     }
 
     /**
@@ -63,7 +55,7 @@ public class Network {
      */
 
     public int getHeight(final IP root) {
-        return 0;
+        return graph.getHeight(root);
     }
 
     /**
@@ -74,7 +66,7 @@ public class Network {
      */
 
     public List<List<IP>> getLevels(final IP root) {
-        return null;
+        return graph.getLevels(root);
     }
 
     // WICHTIG

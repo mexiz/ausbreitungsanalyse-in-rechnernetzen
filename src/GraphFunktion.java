@@ -3,25 +3,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Algo {
+public class GraphFunktion extends GraphParser {
 
-    Graph graph;
-    List<IP> nodes;
-    List<Edge> edges;
     Map<IP, Integer> distance;
+    List<Edge> e;
+    List<IP> n;
 
-    public Algo(Graph graph) {
-        this.graph = graph;
-        this.nodes = graph.getNodes();
-        this.edges = graph.getEdges();
+    public GraphFunktion() {
         distance = new HashMap<>();
     }
 
     public void setDistanceMap(IP root, IP prevIP, int currentLevel) {
         List<Edge> children = getChildren(root, prevIP);
         distance.put(root, currentLevel);
-        for (Edge e : children) {
-            setDistanceMap(e.getY(), e.getX(), currentLevel + 1);
+        for (Edge edge : children) {
+            setDistanceMap(edge.getY(), edge.getX(), currentLevel + 1);
         }
     }
 
@@ -30,8 +26,8 @@ public class Algo {
         int max = 0;
 
         for (Map.Entry<IP, Integer> entry : distance.entrySet()) {
-            if (entry.getValue() + 1 > max) {
-                max = entry.getValue() + 1;
+            if (entry.getValue() > max) {
+                max = entry.getValue();
             }
         }
         return max;
@@ -39,7 +35,7 @@ public class Algo {
 
     public List<List<IP>> getLevels(IP root) {
         List<List<IP>> levels = new ArrayList<>();
-        int numberOfLevels = getHeight(root);
+        int numberOfLevels = getHeight(root) + 1;
         for (int i = 0; i < numberOfLevels; i++) {
             List<IP> level = new ArrayList<>();
             levels.add(level);
@@ -53,16 +49,16 @@ public class Algo {
     private List<Edge> getChildren(IP parent, IP prevIP) {
         List<Edge> children = new ArrayList<>();
 
-        for (Edge e : graph.getEdges()) {
-            if (e.xContains(parent) && !e.yContains(prevIP)) {
-                children.add(e);
+        for (Edge edge : this.e) {
+            if (edge.xContains(parent) && !edge.yContains(prevIP)) {
+                children.add(edge);
             }
         }
         return children;
     }
 
     public boolean checkIP(IP ip) {
-        return graph.getNodes().contains(ip);
+        return this.n.contains(ip);
     }
 
 }

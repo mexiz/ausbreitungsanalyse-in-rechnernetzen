@@ -1,42 +1,35 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-public class Graph {
+public class Graph extends GraphFunktion {
 
-    private List<IP> nodes;
-    private List<Edge> edges;
+    List<IP> nodes;
+    List<Edge> edges;
 
-
-    public Graph(List<IP> nodes , List<Edge> edges){
+    public Graph(List<IP> nodes, List<Edge> edges) {
         this.nodes = nodes;
         this.edges = edges;
+        super.n = nodes;
+        super.e = edges;
     }
 
-    public Graph(){
-        this.nodes = new ArrayList<>();
-        this.edges = new ArrayList<>();
+    public Graph(IP root, List<IP> children) {
+        nodes = new ArrayList<>();
+        edges = new ArrayList<>();
+        nodes.add(root);
+        for (IP ip : children) {
+            nodes.add(ip);
+            edges.add(new Edge(root, ip));
+            edges.add(new Edge(ip, root));
+        }
+        super.n = nodes;
+        super.e = edges;
     }
 
-    public List<IP> getNodes() {
-        return nodes;
+    public Graph(String bracketnotation) throws ParseException {
+        this.nodes = getNodesFromBracketNotation(bracketnotation);
+        this.edges = getEdgesFromBracketNotation(bracketnotation);
+        super.e = edges;
     }
 
-    public void setNodes(List<IP> nodes) {
-        this.nodes = nodes;
-    }
-
-    public List<Edge> getEdges() {
-        return edges;
-    }
-
-    public void setEdges(List<Edge> edges) {
-        this.edges = edges;
-    }
-
-    public void addEdge(Edge edge){
-        edges.add(edge);
-    }
-
-    
 }

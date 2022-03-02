@@ -30,7 +30,7 @@ public class GraphParser {
      *                        richtig ist
      */
 
-    public List<Edge> getEdges(final String bracketNotation) throws ParseException {
+    public List<Edge> getEdgesFromBracketNotation(final String bracketNotation) throws ParseException {
 
         // Entfernt die äußerste Klammer
         String bracket = bracketNotation.substring(1, bracketNotation.length() - 1);
@@ -49,7 +49,7 @@ public class GraphParser {
                 int end = this.indexBracketClosed(splitted, i);
 
                 // Rekursion um eine Ebene tiefer in den Graphen zu kommen
-                List<Edge> supTuples = this.getEdges(this.toString(splitted, i, end));
+                List<Edge> supTuples = this.getEdgesFromBracketNotation(this.toString(splitted, i, end));
                 table.addAll(supTuples);
 
                 // Löscht die Subliste
@@ -77,7 +77,7 @@ public class GraphParser {
      *                        richtig ist
      */
 
-    public List<IP> getNodes(String bracketNotation) throws ParseException {
+    public List<IP> getNodesFromBracketNotation(String bracketNotation) throws ParseException {
         String withoutBrackets = bracketNotation.replace("(", "");
         withoutBrackets = withoutBrackets.replace(")", "");
         if (!withoutBrackets.matches("(" + regexIP + "\\s)*" + regexIP)) {
