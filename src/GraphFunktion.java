@@ -5,12 +5,18 @@ import java.util.Map;
 
 public class GraphFunktion extends GraphParser {
 
-    Map<IP, Integer> distance;
-    List<Edge> e;
-    List<IP> n;
+    private Map<IP, Integer> distance;
+    private List<Edge> edges;
+    private List<IP> nodes;
 
     public GraphFunktion() {
         distance = new HashMap<>();
+        
+    }
+
+    public void init(List<Edge> edges, List<IP> nodes) {
+        this.edges = edges;
+        this.nodes = nodes;
     }
 
     public void setDistanceMap(IP root, IP prevIP, int currentLevel) {
@@ -49,7 +55,7 @@ public class GraphFunktion extends GraphParser {
     private List<Edge> getChildren(IP parent, IP prevIP) {
         List<Edge> children = new ArrayList<>();
 
-        for (Edge edge : this.e) {
+        for (Edge edge : this.edges) {
             if (edge.xContains(parent) && !edge.yContains(prevIP)) {
                 children.add(edge);
             }
@@ -58,7 +64,7 @@ public class GraphFunktion extends GraphParser {
     }
 
     public boolean checkIP(IP ip) {
-        return this.n.contains(ip);
+        return this.nodes.contains(ip);
     }
 
 }

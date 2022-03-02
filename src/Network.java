@@ -1,6 +1,7 @@
 import java.util.List;
 
 public class Network {
+
     private Graph graph;
 
     /**
@@ -33,7 +34,7 @@ public class Network {
      */
 
     public List<IP> list() {
-        return null;
+        return graph.getNodes();
     }
 
     /**

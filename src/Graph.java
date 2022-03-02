@@ -3,16 +3,15 @@ import java.util.List;
 
 public class Graph extends GraphFunktion {
 
-    List<IP> nodes;
-    List<Edge> edges;
+    private List<IP> nodes;
+    private List<Edge> edges;
 
-    public Graph(List<IP> nodes, List<Edge> edges) {
-        this.nodes = nodes;
-        this.edges = edges;
-        super.n = nodes;
-        super.e = edges;
+    public Graph(String bracketnotation) throws ParseException {
+        this.nodes = getNodesFromBracketNotation(bracketnotation);
+        this.edges = getEdgesFromBracketNotation(bracketnotation);
+        super.init(edges, nodes);
     }
-
+    
     public Graph(IP root, List<IP> children) {
         nodes = new ArrayList<>();
         edges = new ArrayList<>();
@@ -22,14 +21,15 @@ public class Graph extends GraphFunktion {
             edges.add(new Edge(root, ip));
             edges.add(new Edge(ip, root));
         }
-        super.n = nodes;
-        super.e = edges;
+        super.init(edges, nodes);
     }
 
-    public Graph(String bracketnotation) throws ParseException {
-        this.nodes = getNodesFromBracketNotation(bracketnotation);
-        this.edges = getEdgesFromBracketNotation(bracketnotation);
-        super.e = edges;
+    public List<IP> getNodes() {
+        return nodes;
+    }
+
+    public void setNodes(List<IP> nodes) {
+        this.nodes = nodes;
     }
 
 }
