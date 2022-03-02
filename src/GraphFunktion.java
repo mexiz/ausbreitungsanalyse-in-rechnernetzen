@@ -11,7 +11,7 @@ public class GraphFunktion extends GraphParser {
 
     public GraphFunktion() {
         distance = new HashMap<>();
-        
+
     }
 
     public void init(List<Edge> edges, List<IP> nodes) {
@@ -23,7 +23,7 @@ public class GraphFunktion extends GraphParser {
         List<Edge> children = getChildren(root, prevIP);
         distance.put(root, currentLevel);
         for (Edge edge : children) {
-            setDistanceMap(edge.getY(), edge.getX(), currentLevel + 1);
+            setDistanceMap(edge.getDestination(), edge.getSource(), currentLevel + 1);
         }
     }
 
@@ -56,7 +56,7 @@ public class GraphFunktion extends GraphParser {
         List<Edge> children = new ArrayList<>();
 
         for (Edge edge : this.edges) {
-            if (edge.xContains(parent) && !edge.yContains(prevIP)) {
+            if (edge.doSourceContain(parent) && !edge.doDestinationContain(prevIP)) {
                 children.add(edge);
             }
         }
@@ -65,6 +65,26 @@ public class GraphFunktion extends GraphParser {
 
     public boolean checkIP(IP ip) {
         return this.nodes.contains(ip);
+    }
+
+    public List<IP> getRoute(final IP start, final IP end, IP prev) {
+        this.setDistanceMap(start, null, 0);
+        List<IP> route = new ArrayList<>();
+        List<Edge> children = getChildren(start, prev);
+        for (Edge edge : children) {
+            if (!route.isEmpty()) {
+                route.add(edge.getSource());
+                return route;
+            }
+            if (edge.doDestinationContain(end)) {
+                route.add(edge.getSource());
+                route.add(end);
+                return route;
+            }
+            route.addAll(getRoute(edge.getDestination(), end, edge.getSource()));
+        }
+
+        return route;
     }
 
 }

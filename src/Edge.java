@@ -1,37 +1,37 @@
 
 public class Edge{
 
-    private IP x;
-    private IP y;
+    private IP source;
+    private IP destination;
 
     public Edge(IP root, IP y) {
-        this.x = root;
-        this.y = y;
+        this.source = root;
+        this.destination = y;
     }
 
-    public IP getY() {
-        return y;
+    public IP getDestination() {
+        return destination;
     }
-    public IP getX() {
-        return x;
+    public IP getSource() {
+        return source;
     }
 
-    public boolean xContains(IP ip) {
+    public boolean doSourceContain(IP ip) {
         if(ip == null) {
             return false;
         }
-        return x.compareTo(ip) == 0;
+        return source.compareTo(ip) == 0;
     }    
-    public boolean yContains(IP ip) {
+    public boolean doDestinationContain(IP ip) {
         if(ip == null) {
             return false;
         }
-        return y.compareTo(ip) == 0;
+        return destination.compareTo(ip) == 0;
     }    
 
     public String toString(){
-        String t = "(" + x.toString();
-        t += " | " + y.toString() + ")";
+        String t = "(" + source.toString();
+        t += " | " + destination.toString() + ")";
         return t;
     }
 }

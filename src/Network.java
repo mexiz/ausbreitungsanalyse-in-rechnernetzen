@@ -70,11 +70,20 @@ public class Network {
         return graph.getLevels(root);
     }
 
-    // WICHTIG
+    /**
+     * Gibt eine Liste mit den Knoten aus, die auf der Route liegen
+     * 
+     * @param start Startwert der Route
+     * @param end   Endwert der Route
+     * @return Die Liste mit den Knoten
+     */
 
     public List<IP> getRoute(final IP start, final IP end) {
-        return null;
+        return graph.getRoute(start, end, null);
     }
+
+
+//TODO: WICHTIG
 
     public String toString(IP root) {
         return null;
