@@ -2,7 +2,7 @@ import java.util.List;
 
 public class Network {
 
-    private Graph graph;
+    public Graph graph;
 
     /**
      * Konstruktor um ein Netzwerk mit nur einem Level zuerzeugen
@@ -28,6 +28,7 @@ public class Network {
 
     public Network(final String bracketNotation) throws ParseException {
         GraphParser parser = new GraphParser();
+        graph = new Graph();
         graph.setEdges(parser.getEdges(bracketNotation));
         graph.setNodes(parser.getNodes(bracketNotation));
     }
@@ -62,8 +63,7 @@ public class Network {
      */
 
     public int getHeight(final IP root) {
-        Algo algo = new Algo(graph);
-        return algo.getHeight(root, null);
+        return 0;
     }
 
     /**
@@ -74,8 +74,7 @@ public class Network {
      */
 
     public List<List<IP>> getLevels(final IP root) {
-        Algo algo = new Algo(graph);
-        return algo.getLevels(root);
+        return null;
     }
 
     // WICHTIG

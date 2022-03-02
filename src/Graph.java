@@ -1,14 +1,21 @@
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Graph {
 
     private List<IP> nodes;
     private List<Edge> edges;
 
+
     public Graph(List<IP> nodes , List<Edge> edges){
         this.nodes = nodes;
         this.edges = edges;
+    }
 
+    public Graph(){
+        this.nodes = new ArrayList<>();
+        this.edges = new ArrayList<>();
     }
 
     public List<IP> getNodes() {
