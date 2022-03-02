@@ -1,5 +1,5 @@
 
-public class Edge{
+public class Edge {
 
     private IP source;
     private IP destination;
@@ -12,24 +12,30 @@ public class Edge{
     public IP getDestination() {
         return destination;
     }
+
     public IP getSource() {
         return source;
     }
 
     public boolean doSourceContain(IP ip) {
-        if(ip == null) {
+        if (ip == null) {
             return false;
         }
         return source.compareTo(ip) == 0;
-    }    
+    }
+
     public boolean doDestinationContain(IP ip) {
-        if(ip == null) {
+        if (ip == null) {
             return false;
         }
         return destination.compareTo(ip) == 0;
-    }    
+    }
 
-    public String toString(){
+    public boolean contains(IP ip) {
+        return doSourceContain(ip) || doDestinationContain(ip);
+    }
+
+    public String toString() {
         String t = "(" + source.toString();
         t += " | " + destination.toString() + ")";
         return t;

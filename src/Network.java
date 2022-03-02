@@ -98,7 +98,7 @@ public class Network {
     }
 
     public boolean disconnect(final IP ip1, final IP ip2) {
-        return false;
+        return graph.removeEdge(ip1, ip2);
     }
 
 }

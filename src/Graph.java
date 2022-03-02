@@ -11,7 +11,7 @@ public class Graph extends GraphFunktion {
         this.edges = getEdgesFromBracketNotation(bracketnotation);
         super.init(edges, nodes);
     }
-    
+
     public Graph(IP root, List<IP> children) {
         nodes = new ArrayList<>();
         edges = new ArrayList<>();

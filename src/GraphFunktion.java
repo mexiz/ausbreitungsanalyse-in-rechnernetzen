@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -68,7 +69,6 @@ public class GraphFunktion extends GraphParser {
     }
 
     public List<IP> getRoute(final IP start, final IP end, IP prev) {
-        this.setDistanceMap(start, null, 0);
         List<IP> route = new ArrayList<>();
         List<Edge> children = getChildren(start, prev);
         for (Edge edge : children) {
@@ -83,8 +83,22 @@ public class GraphFunktion extends GraphParser {
             }
             route.addAll(getRoute(edge.getDestination(), end, edge.getSource()));
         }
-
         return route;
+    }
+
+    public boolean removeEdge(final IP ip1, final IP ip2) {
+
+        Iterator<Edge> iter = edges.iterator();
+        while (iter.hasNext()) {
+            Edge edge = iter.next();
+            if (edge.doDestinationContain(ip1) && edge.doSourceContain(ip2)) {
+                iter.remove();
+            } else if (edge.doSourceContain(ip1) && edge.doDestinationContain(ip2)) {
+                iter.remove();
+            }
+        }
+
+        return false;
     }
 
 }
