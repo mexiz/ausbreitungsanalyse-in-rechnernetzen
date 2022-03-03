@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Graph extends GraphFunktion {
 
@@ -7,9 +9,12 @@ public class Graph extends GraphFunktion {
     private List<Edge> edges;
 
     public Graph(String bracketnotation) throws ParseException {
+
         this.nodes = getNodesFromBracketNotation(bracketnotation);
-        this.edges = getEdgesFromBracketNotation(bracketnotation);
+        this.edges = getEdgesFromBracketNotation(this.nodes, bracketnotation);
+
         super.init(edges, nodes);
+
     }
 
     public Graph(IP root, List<IP> children) {
@@ -24,12 +29,51 @@ public class Graph extends GraphFunktion {
         super.init(edges, nodes);
     }
 
+    public Graph(List<IP> nodes, List<Edge> edges) {
+        this.edges = edges;
+        this.nodes = nodes;
+        super.init(edges, nodes);
+    }
+
     public List<IP> getNodes() {
         return nodes;
     }
-
-    public void setNodes(List<IP> nodes) {
-        this.nodes = nodes;
+    public List<Edge> getEdges() {
+        return edges;
     }
+
+
+
+    public Graph copy(){
+        List <Edge> newEdge = new ArrayList<>();
+        List <IP> newIP = new ArrayList<>();
+        for (Edge edge : edges) {
+            newEdge.add(edge.copy());
+        }
+        for (IP ip : nodes) {
+            newIP.add(ip.copy());
+        }
+        return new Graph(newIP, newEdge);
+    }
+
+    public boolean mergeGraph(Graph merge){
+        Set<IP> nodedd = new HashSet<>(nodes);
+        nodedd.addAll(merge.getNodes());
+        this.nodes = new ArrayList<>(nodedd);
+        super.init(this.edges, this.nodes);
+
+        for (Edge edge : merge.getEdges()) {
+            IP source = edge.getSource();
+            IP des = edge.getDestination();
+
+            if(getEdge(source, des) == null){
+                this.edges.add(new Edge(source, des));
+            }
+        
+        }
+        super.init(this.edges, this.nodes);
+        return isCircular();
+    }
+
 
 }

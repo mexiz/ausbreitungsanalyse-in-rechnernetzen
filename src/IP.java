@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class IP implements Comparable<IP> {
 
     int[] adress;
@@ -23,6 +25,10 @@ public class IP implements Comparable<IP> {
 
         }
 
+    }
+
+    public IP(int[] adress) {
+        this.adress = adress;
     }
 
     public int getIPBlock(int blockNummber) {
@@ -51,5 +57,43 @@ public class IP implements Comparable<IP> {
             }
         }
         return 0;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + Arrays.hashCode(adress);
+        result = prime * result + ((regexByte == null) ? 0 : regexByte.hashCode());
+        result = prime * result + ((regexIP == null) ? 0 : regexIP.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        IP other = (IP) obj;
+        if (!Arrays.equals(adress, other.adress))
+            return false;
+        if (regexByte == null) {
+            if (other.regexByte != null)
+                return false;
+        } else if (!regexByte.equals(other.regexByte))
+            return false;
+        if (regexIP == null) {
+            if (other.regexIP != null)
+                return false;
+        } else if (!regexIP.equals(other.regexIP))
+            return false;
+        return true;
+    }
+
+    public IP copy() {
+        return new IP(adress.clone());
     }
 }

@@ -16,7 +16,8 @@ public class GraphParser {
 
     private String regexByte = "(((2[0-5][0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]\\d)|([0-9])))";
     private String regexIP = "(" + regexByte + "\\.){3}" + regexByte;
-    private String regexBracket = "[(]" + regexIP + "(\\s" + regexIP + ")+" + "[)]";
+    // private String regexBracket = "[(]" + regexIP + "(\\s" + regexIP + ")+" +
+    // "[)]";
 
     private static final String SEPARATOR_IP = " ";
 
@@ -30,7 +31,7 @@ public class GraphParser {
      *                        richtig ist
      */
 
-    public List<Edge> getEdgesFromBracketNotation(final String bracketNotation) throws ParseException {
+    public List<Edge> getEdgesFromBracketNotation(List<IP> node, final String bracketNotation) throws ParseException {
 
         // Entfernt die äußerste Klammer
         String bracket = bracketNotation.substring(1, bracketNotation.length() - 1);
@@ -44,28 +45,52 @@ public class GraphParser {
         while (i < splitted.size()) {
             String ip = splitted.get(i);
             if (ip.charAt(0) == '(') {
-                table.add(new Edge(new IP(root), new IP(ip.substring(1))));
-                table.add(new Edge(new IP(ip.substring(1)) , new IP(root)));
+                IP ip1 = getIPFromNode(node, new IP(root));
+                IP ip2 = getIPFromNode(node, new IP(ip.substring(1)));
+                table.add(new Edge(ip1, ip2));
+                table.add(new Edge(ip2, ip1));
                 int end = this.indexBracketClosed(splitted, i);
 
                 // Rekursion um eine Ebene tiefer in den Graphen zu kommen
-                List<Edge> supTuples = this.getEdgesFromBracketNotation(this.toString(splitted, i, end));
+                List<Edge> supTuples = this.getEdgesFromBracketNotation(node, this.toString(splitted, i, end));
                 table.addAll(supTuples);
 
                 // Löscht die Subliste
                 splitted.subList(i, end).clear();
             } else if (ip.charAt(ip.length() - 1) == ')') {
                 ip = ip.substring(0, ip.length() - 1);
-                table.add(new Edge(new IP(root), new IP(ip)));
-                table.add(new Edge(new IP(ip) , new IP(root)));
+                IP ip1 = getIPFromNode(node, new IP(root));
+                IP ip2 = getIPFromNode(node, new IP(ip));
+                table.add(new Edge(ip1, ip2));
+                table.add(new Edge(ip2, ip1));
                 splitted.remove(i);
             } else {
-                table.add(new Edge(new IP(root), new IP(ip)));
-                table.add(new Edge(new IP(ip) , new IP(root)));
+                IP ip1 = getIPFromNode(node, new IP(root));
+                IP ip2 = getIPFromNode(node, new IP(ip));
+                table.add(new Edge(ip1, ip2));
+                table.add(new Edge(ip2, ip1));
                 splitted.remove(i);
             }
         }
         return table;
+    }
+
+    /**
+     * Gibt die Adresse aus die sich in der Liste befindet.
+     * 
+     * @param nodes  Die Liste mit den Knotenpunkten
+     * @param adress Die Adresse die gesucht werden soll
+     * @return null wenn die Adresse nicht vorhanden ist und die IP wenn sie
+     *         vorhanden ist
+     */
+
+    public IP getIPFromNode(List<IP> nodes, IP adress) {
+        for (IP ip : nodes) {
+            if (ip.compareTo(adress) == 0) {
+                return ip;
+            }
+        }
+        return null;
     }
 
     /**

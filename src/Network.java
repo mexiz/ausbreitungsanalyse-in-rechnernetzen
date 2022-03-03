@@ -1,3 +1,4 @@
+
 import java.util.List;
 
 public class Network {
@@ -82,23 +83,66 @@ public class Network {
         return graph.getRoute(start, end, null);
     }
 
+    /**
+     * Trennt die Verbindung zwischen zwei Knoten und entfernt sie wenn nötig
+     * 
+     * 
+     * @param ip1 Erste Adresse
+     * @param ip2 Zweite Adresse
+     * @return true wenn zwei Konten getrennt wurden
+     */
 
-//TODO: WICHTIG
+    public boolean disconnect(final IP ip1, final IP ip2) {
+        return graph.removeEdge(ip1, ip2);
+    }
+
+    /**
+     * Verbindet zwei Knoten wenn möglich
+     * 
+     * @param ip1 Erste Adresse
+     * @param ip2 Zweite Adresse
+     * @return true wenn zwei Konten verbunden wurden
+     */
+
+    public boolean connect(final IP ip1, final IP ip2) {
+        return graph.addEdge(ip1, ip2);
+    }
+
+    /**
+     * Verbindet zwei Netwerke
+     * 
+     * @param subnet Das zu verbindende Netzwerk
+     * @return  Ob die zusammenführung gelungen ist
+     */
+    public boolean add(final Network subnet) {
+        Graph first = this.getGraph().copy();
+        Graph two = subnet.getGraph().copy();
+
+        if (!first.mergeGraph(two)) {
+            this.graph = first;
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Gibt den Graphen des Netzwerkes zurück
+     * 
+     * @return den Graphen des Netzwerkes
+     */
+    public Graph getGraph() {
+        return graph;
+    }
+
+
+    // TODO: WICHTIG
 
     public String toString(IP root) {
         return null;
     }
 
-    public boolean add(final Network subnet) {
-        return false;
-    }
 
-    public boolean connect(final IP ip1, final IP ip2) {
-        return false;
-    }
 
-    public boolean disconnect(final IP ip1, final IP ip2) {
-        return graph.removeEdge(ip1, ip2);
-    }
 
 }

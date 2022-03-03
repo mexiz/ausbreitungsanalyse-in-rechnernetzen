@@ -12,7 +12,6 @@ public class GraphFunktion extends GraphParser {
 
     public GraphFunktion() {
         distance = new HashMap<>();
-
     }
 
     public void init(List<Edge> edges, List<IP> nodes) {
@@ -88,17 +87,57 @@ public class GraphFunktion extends GraphParser {
 
     public boolean removeEdge(final IP ip1, final IP ip2) {
 
-        Iterator<Edge> iter = edges.iterator();
-        while (iter.hasNext()) {
-            Edge edge = iter.next();
-            if (edge.doDestinationContain(ip1) && edge.doSourceContain(ip2)) {
-                iter.remove();
-            } else if (edge.doSourceContain(ip1) && edge.doDestinationContain(ip2)) {
-                iter.remove();
+        Edge one = getEdge(ip1, ip2);
+        Edge reversed = getEdge(ip2, ip1);
+        if (one == null && reversed == null) {
+            return false;
+        }
+        edges.remove(one);
+        edges.remove(reversed);
+
+        boolean remove = false;
+        if (getChildren(getIPFromNode(this.nodes, ip1), null).isEmpty()) {
+            nodes.remove(getIPFromNode(this.nodes, ip1));
+            remove = true;
+        }
+        if (getChildren(getIPFromNode(this.nodes, ip2), null).isEmpty()) {
+            nodes.remove(getIPFromNode(this.nodes, ip2));
+            remove = true;
+        }
+        return remove;
+
+    }
+
+    public Edge getEdge(IP ip1, IP ip2) {
+        List<Edge> child = getChildren(ip1, null);
+        IP realIP1 = getIPFromNode(this.nodes, ip1);
+        IP realIP2 = getIPFromNode(this.nodes, ip2);
+        if (realIP1 == null || realIP2 == null) {
+            return null;
+        }
+        for (Edge edge : child) {
+            if (edge.getSource().equals(realIP1) && edge.getDestination().equals(realIP2)) {
+                return edge;
             }
         }
+        return null;
+    }
 
-        return false;
+    public boolean addEdge(IP ip1, IP ip2) {
+
+        Edge one = getEdge(ip1, ip2);
+        Edge reversed = getEdge(ip2, ip1);
+        if (one != null || reversed != null) {
+            return false;
+        }
+        this.edges.add(one);
+        this.edges.add(reversed);
+
+        return true;
+    }
+
+    public boolean isCircular() {
+        return (((this.edges.size() / 2) + 1) != (this.nodes.size()));
     }
 
 }

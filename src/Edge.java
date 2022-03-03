@@ -40,4 +40,8 @@ public class Edge {
         t += " | " + destination.toString() + ")";
         return t;
     }
+
+    public Edge copy(){
+        return new Edge(source.copy(), destination.copy());
+    }
 }
