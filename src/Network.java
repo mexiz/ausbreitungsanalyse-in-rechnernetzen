@@ -1,6 +1,10 @@
 
 import java.util.List;
 
+/**
+ * 
+ */
+
 public class Network {
 
     private Graph graph;
@@ -112,7 +116,7 @@ public class Network {
      * Verbindet zwei Netwerke
      * 
      * @param subnet Das zu verbindende Netzwerk
-     * @return  Ob die zusammenführung gelungen ist
+     * @return  Ob die zusammenführung gelungen ists
      */
     public boolean add(final Network subnet) {
         Graph first = this.getGraph().copy();
@@ -136,10 +140,15 @@ public class Network {
     }
 
 
-    // TODO: WICHTIG
+    /**
+     * Wandelt den Baum in die Bracketnotation um.
+     * 
+     * @param root Die Wurzel des Baumes
+     * @return Den String mit der Bracketnotation
+     */
 
     public String toString(IP root) {
-        return null;
+        return graph.toBracketNotation(root, null);
     }
 
 

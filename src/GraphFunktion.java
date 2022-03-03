@@ -1,6 +1,6 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -60,6 +60,7 @@ public class GraphFunktion extends GraphParser {
                 children.add(edge);
             }
         }
+        Collections.sort(children);
         return children;
     }
 
@@ -138,6 +139,28 @@ public class GraphFunktion extends GraphParser {
 
     public boolean isCircular() {
         return (((this.edges.size() / 2) + 1) != (this.nodes.size()));
+    }
+
+    public String toBracketNotation(IP root, IP prevIP) {
+
+        List<Edge> children = getChildren(root, prevIP);
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("(");
+        stringBuilder.append(root.toString());
+
+        for (Edge edge : children) {
+            List<Edge> grandkids = getChildren(edge.getDestination(), root);
+            if (!grandkids.isEmpty()) {
+                stringBuilder.append(" ");
+                stringBuilder.append(toBracketNotation(edge.getDestination(), root));
+            }else {
+                stringBuilder.append(" ");
+                stringBuilder.append(edge.getDestination().toString());
+            }
+           
+        }
+        stringBuilder.append(")");
+        return stringBuilder.toString();
     }
 
 }
