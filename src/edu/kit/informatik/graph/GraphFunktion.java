@@ -1,7 +1,9 @@
 package edu.kit.informatik.graph;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -75,17 +77,22 @@ public class GraphFunktion extends GraphParser {
     public List<IP> getRoute(final IP start, final IP end, IP prev) {
         List<IP> route = new ArrayList<>();
         List<Edge> children = getChildren(start, prev);
-        for (Edge edge : children) {
+        Iterator<Edge> iter = children.iterator();
+        while (iter.hasNext() && route.isEmpty()) {
+            Edge edge = iter.next();
+
+            if (edge.doDestinationContain(end)) {
+                route.add(end);
+                route.add(edge.getSource());
+                return route;
+            }
+
+            route.addAll(getRoute(edge.getDestination(), end, edge.getSource()));
+
             if (!route.isEmpty()) {
                 route.add(edge.getSource());
                 return route;
             }
-            if (edge.doDestinationContain(end)) {
-                route.add(edge.getSource());
-                route.add(end);
-                return route;
-            }
-            route.addAll(getRoute(edge.getDestination(), end, edge.getSource()));
         }
         return route;
     }
@@ -101,12 +108,12 @@ public class GraphFunktion extends GraphParser {
         edges.remove(reversed);
 
         boolean remove = false;
-        if (getChildren(getIPFromNode(this.nodes, ip1), null).isEmpty()) {
-            nodes.remove(getIPFromNode(this.nodes, ip1));
+        if (getChildren(super.getIPFromNode(this.nodes, ip1), null).isEmpty()) {
+            nodes.remove(super.getIPFromNode(this.nodes, ip1));
             remove = true;
         }
-        if (getChildren(getIPFromNode(this.nodes, ip2), null).isEmpty()) {
-            nodes.remove(getIPFromNode(this.nodes, ip2));
+        if (getChildren(super.getIPFromNode(this.nodes, ip2), null).isEmpty()) {
+            nodes.remove(super.getIPFromNode(this.nodes, ip2));
             remove = true;
         }
         return remove;
@@ -115,8 +122,8 @@ public class GraphFunktion extends GraphParser {
 
     public Edge getEdge(IP ip1, IP ip2) {
         List<Edge> child = getChildren(ip1, null);
-        IP realIP1 = getIPFromNode(this.nodes, ip1);
-        IP realIP2 = getIPFromNode(this.nodes, ip2);
+        IP realIP1 = super.getIPFromNode(this.nodes, ip1);
+        IP realIP2 = super.getIPFromNode(this.nodes, ip2);
         if (realIP1 == null || realIP2 == null) {
             return null;
         }
@@ -147,6 +154,10 @@ public class GraphFunktion extends GraphParser {
 
     public String toBracketNotation(IP root, IP prevIP) {
 
+        if(super.getIPFromNode(nodes, root) == null){
+            return "";
+        }
+
         List<Edge> children = getChildren(root, prevIP);
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("(");
@@ -157,11 +168,11 @@ public class GraphFunktion extends GraphParser {
             if (!grandkids.isEmpty()) {
                 stringBuilder.append(" ");
                 stringBuilder.append(toBracketNotation(edge.getDestination(), root));
-            }else {
+            } else {
                 stringBuilder.append(" ");
                 stringBuilder.append(edge.getDestination().toString());
             }
-           
+
         }
         stringBuilder.append(")");
         return stringBuilder.toString();

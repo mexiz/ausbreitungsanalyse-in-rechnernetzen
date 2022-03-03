@@ -1,5 +1,7 @@
 package edu.kit.informatik.graph;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,7 +19,6 @@ public class Graph extends GraphFunktion {
 
         this.nodes = getNodesFromBracketNotation(bracketnotation);
         this.edges = getEdgesFromBracketNotation(this.nodes, bracketnotation);
-
         super.init(edges, nodes);
 
     }
@@ -41,17 +42,17 @@ public class Graph extends GraphFunktion {
     }
 
     public List<IP> getNodes() {
+        Collections.sort(nodes);
         return nodes;
     }
+
     public List<Edge> getEdges() {
         return edges;
     }
 
-
-
-    public Graph copy(){
-        List <Edge> newEdge = new ArrayList<>();
-        List <IP> newIP = new ArrayList<>();
+    public Graph copy() {
+        List<Edge> newEdge = new ArrayList<>();
+        List<IP> newIP = new ArrayList<>();
         for (Edge edge : edges) {
             newEdge.add(edge.copy());
         }
@@ -61,24 +62,26 @@ public class Graph extends GraphFunktion {
         return new Graph(newIP, newEdge);
     }
 
-    public boolean mergeGraph(Graph merge){
+    public boolean mergeGraph(Graph merge) {
         Set<IP> nodedd = new HashSet<>(nodes);
         nodedd.addAll(merge.getNodes());
         this.nodes = new ArrayList<>(nodedd);
         super.init(this.edges, this.nodes);
 
+        boolean sameGraph = false;
+
         for (Edge edge : merge.getEdges()) {
             IP source = edge.getSource();
             IP des = edge.getDestination();
 
-            if(getEdge(source, des) == null){
+            if (getEdge(source, des) == null) {
                 this.edges.add(new Edge(source, des));
+                sameGraph = true;
             }
-        
+
         }
         super.init(this.edges, this.nodes);
-        return isCircular();
+        return sameGraph;
     }
-
 
 }

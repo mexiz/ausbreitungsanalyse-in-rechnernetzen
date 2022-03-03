@@ -90,6 +90,9 @@ public class GraphParser {
      */
 
     public IP getIPFromNode(List<IP> nodes, IP adress) {
+        if(adress == null){
+            return null;
+        }
         for (IP ip : nodes) {
             if (ip.compareTo(adress) == 0) {
                 return ip;

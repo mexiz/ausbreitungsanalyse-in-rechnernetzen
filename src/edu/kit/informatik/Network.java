@@ -1,5 +1,8 @@
 package edu.kit.informatik;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import edu.kit.informatik.graph.Graph;
@@ -43,7 +46,11 @@ public class Network {
      */
 
     public List<IP> list() {
-        return graph.getNodes();
+        List<IP> node = new ArrayList<>();
+        for (IP ip : graph.getNodes()) {
+            node.add(ip.copy());
+        }
+        return node;
     }
 
     /**
@@ -88,7 +95,10 @@ public class Network {
      */
 
     public List<IP> getRoute(final IP start, final IP end) {
-        return graph.getRoute(start, end, null);
+
+        List<IP> route = graph.getRoute(start, end, null);
+        Collections.reverse(route);
+        return route;
     }
 
     /**
@@ -120,13 +130,16 @@ public class Network {
      * Verbindet zwei Netwerke
      * 
      * @param subnet Das zu verbindende Netzwerk
-     * @return  Ob die zusammenführung gelungen ists
+     * @return Ob die zusammenführung gelungen ists
      */
     public boolean add(final Network subnet) {
         Graph first = this.getGraph().copy();
+        if (subnet == null) {
+            return false;
+        }
         Graph two = subnet.getGraph().copy();
 
-        if (!first.mergeGraph(two)) {
+        if (first.mergeGraph(two) && !first.isCircular()) {
             this.graph = first;
             return true;
         }
@@ -143,7 +156,6 @@ public class Network {
         return graph;
     }
 
-
     /**
      * Wandelt den Baum in die Bracketnotation um.
      * 
@@ -154,8 +166,5 @@ public class Network {
     public String toString(IP root) {
         return graph.toBracketNotation(root, null);
     }
-
-
-
 
 }
