@@ -1,8 +1,12 @@
+package edu.kit.informatik.graph;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import edu.kit.informatik.model.Edge;
+import edu.kit.informatik.model.IP;
 
 public class GraphFunktion extends GraphParser {
 

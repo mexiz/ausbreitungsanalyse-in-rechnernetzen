@@ -1,4 +1,7 @@
+package edu.kit.informatik.model;
 import java.util.Arrays;
+
+import edu.kit.informatik.ParseException;
 
 public class IP implements Comparable<IP> {
 

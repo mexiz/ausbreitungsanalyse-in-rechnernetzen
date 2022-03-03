@@ -8,6 +8,7 @@ build
 *.war
 *.ear
 testing/
+test/
 checkstyle/
 *.pdf
 .vscode/

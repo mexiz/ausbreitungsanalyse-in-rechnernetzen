@@ -1,8 +1,13 @@
+package edu.kit.informatik.graph;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import edu.kit.informatik.ParseException;
+import edu.kit.informatik.model.Edge;
+import edu.kit.informatik.model.IP;
 
 /**
  * Die Parser für die Umformung von der Bracketnotation in die Tupel Notation

@@ -1,3 +1,4 @@
+package edu.kit.informatik.model;
 
 public class Edge implements Comparable<Edge> {
 
