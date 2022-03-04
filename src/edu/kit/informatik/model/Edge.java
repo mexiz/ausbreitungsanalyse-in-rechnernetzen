@@ -24,6 +24,10 @@ public class Edge implements Comparable<Edge> {
         this.destination = y;
     }
 
+    public String toString(){
+        return source.toString() + " -> " + destination.toString();
+    }
+
     /**
      * Getter für das Ziel
      * 

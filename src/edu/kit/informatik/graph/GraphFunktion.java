@@ -55,6 +55,9 @@ public class GraphFunktion extends GraphParser {
 
     private void setDistanceMap(IP root, IP prevIP, int currentLevel) {
         List<Edge> children = getChildren(root, prevIP);
+        if(prevIP == null){
+            distance = new HashMap<>();
+        }
         distance.put(root, currentLevel);
         for (Edge edge : children) {
             setDistanceMap(edge.getDestination(), edge.getSource(), currentLevel + 1);
@@ -181,22 +184,19 @@ public class GraphFunktion extends GraphParser {
 
         Edge one = getEdge(ip1, ip2);
         Edge reversed = getEdge(ip2, ip1);
-        if (one == null && reversed == null) {
+        if ((one == null && reversed == null) || nodes.size() < 3) {
             return false;
         }
         edges.remove(one);
         edges.remove(reversed);
 
-        boolean remove = false;
         if (getChildren(super.getIPFromNode(this.nodes, ip1), null).isEmpty()) {
             nodes.remove(super.getIPFromNode(this.nodes, ip1));
-            remove = true;
         }
         if (getChildren(super.getIPFromNode(this.nodes, ip2), null).isEmpty()) {
             nodes.remove(super.getIPFromNode(this.nodes, ip2));
-            remove = true;
         }
-        return remove;
+        return true;
 
     }
 
