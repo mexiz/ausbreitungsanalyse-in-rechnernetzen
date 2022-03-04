@@ -10,22 +10,50 @@ import java.util.Map;
 import edu.kit.informatik.model.Edge;
 import edu.kit.informatik.model.IP;
 
+/**
+ * Alle Funktionen die benötigt werden für einen Graph
+ * Erbt von der Klasse die den Graphen erzeugt
+ * 
+ * @author uwhlp
+ * @version 1.0
+ */
+
 public class GraphFunktion extends GraphParser {
 
     private Map<IP, Integer> distance;
     private List<Edge> edges;
     private List<IP> nodes;
 
+    /**
+     * Konstruktor der die Map erzeugt.
+     * 
+     */
+
     public GraphFunktion() {
         distance = new HashMap<>();
     }
+
+    /**
+     * Setzt die Listen für die Funktionen
+     * 
+     * @param edges Die Liste mit den Kanten
+     * @param nodes Die Liste mit den Knoten
+     */
 
     public void init(List<Edge> edges, List<IP> nodes) {
         this.edges = edges;
         this.nodes = nodes;
     }
 
-    public void setDistanceMap(IP root, IP prevIP, int currentLevel) {
+    /**
+     * Erzeugt eine Map um die Distanze zur Wurzel zu hinterlegen
+     * 
+     * @param root         Die Wurzel
+     * @param prevIP       Das Übergabeobjekt für die Rekursion
+     * @param currentLevel Das Level wo sich das Objekt befindet
+     */
+
+    private void setDistanceMap(IP root, IP prevIP, int currentLevel) {
         List<Edge> children = getChildren(root, prevIP);
         distance.put(root, currentLevel);
         for (Edge edge : children) {
@@ -33,10 +61,17 @@ public class GraphFunktion extends GraphParser {
         }
     }
 
+    /**
+     * Gibt die Höhe des Baumes an
+     * 
+     * @param root Die Wurzel
+     * @return die Höhe des Baumes
+     */
+
     public int getHeight(IP root) {
-        IP nodeIP = getIPFromNode(this.nodes , root);
-        if(nodeIP == null){
-            this.distance = new HashMap<>(); 
+        IP nodeIP = getIPFromNode(this.nodes, root);
+        if (nodeIP == null) {
+            this.distance = new HashMap<>();
             return -1;
         }
         this.setDistanceMap(root, null, 0);
@@ -50,9 +85,16 @@ public class GraphFunktion extends GraphParser {
         return max;
     }
 
+    /**
+     * Übergibt eine Liste mit den IPs in den verschiedenen Leveln
+     * 
+     * @param root Die Wurzel
+     * @return die Liste mit dem leveln und den Adressen
+     */
+
     public List<List<IP>> getLevels(IP root) {
         List<List<IP>> levels = new ArrayList<>();
-        int numberOfLevels = getHeight(root) +1 ;
+        int numberOfLevels = getHeight(root) + 1;
         for (int i = 0; i < numberOfLevels; i++) {
             List<IP> level = new ArrayList<>();
             levels.add(level);
@@ -63,6 +105,14 @@ public class GraphFunktion extends GraphParser {
         }
         return levels;
     }
+
+    /**
+     * Hilfsmethode um die Kanten zufinden die mit der IP verbunden sind
+     * 
+     * @param parent Adresse von den die Kante gesucht werden sollen
+     * @param prevIP die Adresse die Ignoriert werden soll
+     * @return die Liste mit den Kanten
+     */
 
     private List<Edge> getChildren(IP parent, IP prevIP) {
         List<Edge> children = new ArrayList<>();
@@ -76,9 +126,25 @@ public class GraphFunktion extends GraphParser {
         return children;
     }
 
+    /**
+     * Checkt ob die Adresse ein Knoten im Grapgen ist
+     * 
+     * @param ip Adresse die überprüft werden sollen
+     * @return true wenn sie vorhanden ist
+     */
+
     public boolean checkIP(IP ip) {
         return this.nodes.contains(ip);
     }
+
+    /**
+     * Die Route von einer Adresse zur anderen Adresse
+     * 
+     * @param start Startadresse
+     * @param end Endadresse
+     * @param prev Objekt für die Rekursion 
+     * @return Die Liste mit den Knoten
+     */
 
     public List<IP> getRoute(final IP start, final IP end, IP prev) {
         List<IP> route = new ArrayList<>();
@@ -160,7 +226,7 @@ public class GraphFunktion extends GraphParser {
 
     public String toBracketNotation(IP root, IP prevIP) {
 
-        if(super.getIPFromNode(nodes, root) == null){
+        if (super.getIPFromNode(nodes, root) == null) {
             return "";
         }
 

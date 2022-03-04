@@ -9,7 +9,10 @@ import edu.kit.informatik.graph.Graph;
 import edu.kit.informatik.model.IP;
 
 /**
+ * Die Netzwerklasse
  * 
+ * @author uwlho
+ * @version 1.0
  */
 
 public class Network {
@@ -72,6 +75,10 @@ public class Network {
      */
 
     public int getHeight(final IP root) {
+        int height = graph.getHeight(root);
+        if (height < 0) {
+            return 0;
+        }
         return graph.getHeight(root);
     }
 
@@ -83,7 +90,7 @@ public class Network {
      */
 
     public List<List<IP>> getLevels(final IP root) {
-        if(root == null){
+        if (root == null) {
             return new ArrayList<>();
         }
         return graph.getLevels(root);

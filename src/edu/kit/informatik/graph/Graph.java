@@ -10,6 +10,11 @@ import edu.kit.informatik.ParseException;
 import edu.kit.informatik.model.Edge;
 import edu.kit.informatik.model.IP;
 
+/**
+ * @author uwhlp
+ * @version 1.0
+ */
+
 public class Graph extends GraphFunktion {
 
     private List<IP> nodes;

@@ -3,6 +3,12 @@ import java.util.Arrays;
 
 import edu.kit.informatik.ParseException;
 
+/**
+ * @author uwhlp
+ * @version 1.0
+ */
+
+
 public class IP implements Comparable<IP> {
 
     int[] adress;

@@ -1,5 +1,11 @@
 package edu.kit.informatik.model;
 
+/**
+ * @author uwhlp
+ * @version 1.0
+ */
+
+
 public class Edge implements Comparable<Edge> {
 
     private IP source;
