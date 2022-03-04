@@ -2,8 +2,23 @@ package edu.kit.informatik;
 
 import edu.kit.informatik.model.IP;
 
+/**
+ * 
+ * Testklasse
+ * 
+ * @author uwhlp
+ * @version 1.0
+ * 
+ */
+
 public class Test {
 
+    /**
+     * Main-Methde
+     * 
+     * @param args args
+     * @throws ParseException Exception
+     */
     public static void main(String[] args) throws ParseException {
 
         final String SMALL_NET = "(85.193.148.81 (141.255.1.133 122.117.67.158 0.146.197.108) 34.49.145.239 "

@@ -20,6 +20,13 @@ public class Graph extends GraphFunktion {
     private List<IP> nodes;
     private List<Edge> edges;
 
+    /**
+     * Konstruktor für die Eingabe mit der Bracketnotation
+     * 
+     * @param bracketnotation die Bracketnotation
+     * @throws ParseException Wenn die Bracketnotation fehlerhaft ist
+     */
+
     public Graph(String bracketnotation) throws ParseException {
 
         this.nodes = getNodesFromBracketNotation(bracketnotation);
@@ -27,6 +34,13 @@ public class Graph extends GraphFunktion {
         super.init(edges, nodes);
 
     }
+
+    /**
+     * Konstruktor für die Eingabe eines Graphes mit der Höhe 1
+     * 
+     * @param root     die Wurzel
+     * @param children die Kinder von der Wurzel
+     */
 
     public Graph(IP root, List<IP> children) {
         nodes = new ArrayList<>();
@@ -40,20 +54,45 @@ public class Graph extends GraphFunktion {
         super.init(edges, nodes);
     }
 
+    /**
+     * Konstruktor für die copy() methode
+     * 
+     * @param nodes Liste mit Knoten
+     * @param edges Liste mit Kanten
+     */
+
     public Graph(List<IP> nodes, List<Edge> edges) {
         this.edges = edges;
         this.nodes = nodes;
         super.init(edges, nodes);
     }
 
+    /**
+     * Getter für die Knoten
+     * 
+     * @return sortierte Liste an Knoten
+     */
+
     public List<IP> getNodes() {
         Collections.sort(nodes);
         return nodes;
     }
 
+    /**
+     * Getter für die Kanten
+     * 
+     * @return gibt eine Liste an Kanten zurück
+     */
+
     public List<Edge> getEdges() {
         return edges;
     }
+
+    /**
+     * Kopiert den Graphen und gibt ihn aus
+     * 
+     * @return den kopierten Graphen
+     */
 
     public Graph copy() {
         List<Edge> newEdge = new ArrayList<>();
@@ -66,6 +105,13 @@ public class Graph extends GraphFunktion {
         }
         return new Graph(newIP, newEdge);
     }
+
+    /**
+     * Vebindet den Graphen mit einem anderen
+     * 
+     * @param merge der Graph zum verbinden
+     * @return ob der Graph verbunden wurde
+     */
 
     public boolean mergeGraph(Graph merge) {
         Set<IP> nodedd = new HashSet<>(nodes);

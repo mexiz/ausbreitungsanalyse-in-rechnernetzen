@@ -141,8 +141,8 @@ public class GraphFunktion extends GraphParser {
      * Die Route von einer Adresse zur anderen Adresse
      * 
      * @param start Startadresse
-     * @param end Endadresse
-     * @param prev Objekt für die Rekursion 
+     * @param end   Endadresse
+     * @param prev  Objekt für die Rekursion
      * @return Die Liste mit den Knoten
      */
 
@@ -169,6 +169,14 @@ public class GraphFunktion extends GraphParser {
         return route;
     }
 
+    /**
+     * Entfernt eine Kante im Graphen
+     * 
+     * @param ip1 erster Knoten
+     * @param ip2 zweiter Knoten
+     * @return ob der Knoten entfernt wurde
+     */
+
     public boolean removeEdge(final IP ip1, final IP ip2) {
 
         Edge one = getEdge(ip1, ip2);
@@ -192,6 +200,14 @@ public class GraphFunktion extends GraphParser {
 
     }
 
+    /**
+     * Gibt die Kante aus dem Graphen aus
+     * 
+     * @param ip1 erster Knoten
+     * @param ip2 zweiter Knoten
+     * @return gibt die Kante zurück
+     */
+
     public Edge getEdge(IP ip1, IP ip2) {
         List<Edge> child = getChildren(ip1, null);
         IP realIP1 = super.getIPFromNode(this.nodes, ip1);
@@ -207,6 +223,14 @@ public class GraphFunktion extends GraphParser {
         return null;
     }
 
+    /**
+     * Fügt eine Kante hinzu
+     * 
+     * @param ip1 erster Knoten
+     * @param ip2 zweiter Knoten
+     * @return gibt zurück ob die Kante gesetzt wurde
+     */
+
     public boolean addEdge(IP ip1, IP ip2) {
 
         Edge one = getEdge(ip1, ip2);
@@ -220,9 +244,22 @@ public class GraphFunktion extends GraphParser {
         return true;
     }
 
+    /**
+     * Checkt ob der Graph ein Kreis ist
+     * @return ob es ein Kreis ist
+     */
+
     public boolean isCircular() {
         return (((this.edges.size() / 2) + 1) != (this.nodes.size()));
     }
+
+    /**
+     * Wandelt den Graph in die Bracketnotation um
+     * 
+     * @param root die Wurzel
+     * @param prevIP Objekt für die Rekursion
+     * @return den Graphen in der Bracketnotation
+     */
 
     public String toBracketNotation(IP root, IP prevIP) {
 

@@ -1,4 +1,5 @@
 package edu.kit.informatik.model;
+
 import java.util.Arrays;
 
 import edu.kit.informatik.ParseException;
@@ -8,7 +9,6 @@ import edu.kit.informatik.ParseException;
  * @version 1.0
  */
 
-
 public class IP implements Comparable<IP> {
 
     int[] adress;
@@ -16,6 +16,12 @@ public class IP implements Comparable<IP> {
     private String regexByte = "(((2[0-5][0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]\\d)|([0-9])))";
     private String regexIP = "(" + regexByte + "\\.){3}" + regexByte;
 
+    /**
+     * Konstruktor mit der Pointnotation
+     * 
+     * @param pointNotation die Adresse
+     * @throws ParseException wenn die Adresse nicht der Form passt
+     */
     public IP(final String pointNotation) throws ParseException {
 
         if (!pointNotation.matches(regexIP)) {
@@ -36,21 +42,23 @@ public class IP implements Comparable<IP> {
 
     }
 
+    /**
+     * Konstruktor für die copy()-Methide
+     * 
+     * @param adress die Adresse
+     */
+
     public IP(int[] adress) {
         this.adress = adress;
-    }
-
-    public int getIPBlock(int blockNummber) {
-        return adress[blockNummber];
     }
 
     @Override
     public String toString() {
 
-        StringBuilder stringBuilder = new StringBuilder(String.valueOf(this.getIPBlock(0)));
+        StringBuilder stringBuilder = new StringBuilder(String.valueOf(this.adress[0]));
         for (int i = 1; i < adress.length; i++) {
             stringBuilder.append(".");
-            stringBuilder.append(this.getIPBlock(i));
+            stringBuilder.append(this.adress[i]);
         }
         return stringBuilder.toString();
     }
@@ -58,10 +66,10 @@ public class IP implements Comparable<IP> {
     @Override
     public int compareTo(IP o) {
         for (int i = 0; i < adress.length; i++) {
-            if (o.getIPBlock(i) < this.getIPBlock(i)) {
+            if (o.adress[i] < this.adress[i]) {
                 return 1;
             }
-            if (o.getIPBlock(i) > this.getIPBlock(i)) {
+            if (o.adress[i] > this.adress[i]) {
                 return -1;
             }
         }
@@ -89,11 +97,6 @@ public class IP implements Comparable<IP> {
         IP other = (IP) obj;
         if (!Arrays.equals(adress, other.adress))
             return false;
-        if (regexByte == null) {
-            if (other.regexByte != null)
-                return false;
-        } else if (!regexByte.equals(other.regexByte))
-            return false;
         if (regexIP == null) {
             if (other.regexIP != null)
                 return false;
@@ -101,6 +104,12 @@ public class IP implements Comparable<IP> {
             return false;
         return true;
     }
+
+    /**
+     * Kopiert das IP-Objekt
+     * 
+     * @return das kopierte IP-Objekt
+     */
 
     public IP copy() {
         return new IP(adress.clone());
