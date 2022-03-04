@@ -83,6 +83,9 @@ public class Network {
      */
 
     public List<List<IP>> getLevels(final IP root) {
+        if(root == null){
+            return new ArrayList<>();
+        }
         return graph.getLevels(root);
     }
 

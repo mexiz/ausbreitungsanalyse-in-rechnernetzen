@@ -34,6 +34,11 @@ public class GraphFunktion extends GraphParser {
     }
 
     public int getHeight(IP root) {
+        IP nodeIP = getIPFromNode(this.nodes , root);
+        if(nodeIP == null){
+            this.distance = new HashMap<>(); 
+            return -1;
+        }
         this.setDistanceMap(root, null, 0);
         int max = 0;
 
@@ -47,13 +52,14 @@ public class GraphFunktion extends GraphParser {
 
     public List<List<IP>> getLevels(IP root) {
         List<List<IP>> levels = new ArrayList<>();
-        int numberOfLevels = getHeight(root) + 1;
+        int numberOfLevels = getHeight(root) +1 ;
         for (int i = 0; i < numberOfLevels; i++) {
             List<IP> level = new ArrayList<>();
             levels.add(level);
         }
         for (Map.Entry<IP, Integer> entry : distance.entrySet()) {
             levels.get(entry.getValue()).add(entry.getKey());
+            Collections.sort(levels.get(entry.getValue()));
         }
         return levels;
     }

@@ -14,9 +14,11 @@ public class Test {
                         + "(231.189.0.127 39.20.222.120 77.135.84.171 116.132.83.77 252.29.23.0))";
 
         Network net = new Network(SMALL_NET);
-        Network net2 = new Network("(0.0.0.0 1.1.1.1)");
+        net.getLevels(new IP("0.0.0.0"));
+        
+        //Network net2 = new Network("(0.0.0.0 1.1.1.1)");
 
-        net.add(net2);
+        //net.add(net2);
 
 
         
