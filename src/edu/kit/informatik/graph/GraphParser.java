@@ -1,4 +1,5 @@
 package edu.kit.informatik.graph;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -19,12 +20,11 @@ import edu.kit.informatik.model.IP;
 
 public class GraphParser {
 
+    private static final String SEPARATOR_IP = " ";
     private String regexByte = "(((2[0-5][0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]\\d)|([0-9])))";
     private String regexIP = "(" + regexByte + "\\.){3}" + regexByte;
     // private String regexBracket = "[(]" + regexIP + "(\\s" + regexIP + ")+" +
     // "[)]";
-
-    private static final String SEPARATOR_IP = " ";
 
     /**
      * Die Methode wandelt den Baum, der als Bracketnotation dargestellt wird,
@@ -90,7 +90,7 @@ public class GraphParser {
      */
 
     public IP getIPFromNode(List<IP> nodes, IP adress) {
-        if(adress == null){
+        if (adress == null) {
             return null;
         }
         for (IP ip : nodes) {
