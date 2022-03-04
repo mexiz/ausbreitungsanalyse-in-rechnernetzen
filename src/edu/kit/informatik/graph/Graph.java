@@ -11,6 +11,8 @@ import edu.kit.informatik.model.Edge;
 import edu.kit.informatik.model.IP;
 
 /**
+ * Der Graph mit den Knoten und Kanten und den Funktionen
+ * 
  * @author uwhlp
  * @version 1.0
  */

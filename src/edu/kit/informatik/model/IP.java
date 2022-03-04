@@ -5,6 +5,8 @@ import java.util.Arrays;
 import edu.kit.informatik.ParseException;
 
 /**
+ * Die IP-adresse
+ * 
  * @author uwhlp
  * @version 1.0
  */
@@ -12,6 +14,8 @@ import edu.kit.informatik.ParseException;
 public class IP implements Comparable<IP> {
 
     private int[] adress;
+
+    private final int ADRESS_BYTE_NUMBER = 4;
 
     private String regexByte = "(((2[0-5][0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]\\d)|([0-9])))";
     private String regexIP = "(" + regexByte + "\\.){3}" + regexByte;
@@ -30,7 +34,7 @@ public class IP implements Comparable<IP> {
 
         String[] adressString = pointNotation.split("\\.");
 
-        if (adressString.length != 4) {
+        if (adressString.length != ADRESS_BYTE_NUMBER) {
             throw new ParseException("Invalid IP-Adress!");
         }
         adress = new int[adressString.length];

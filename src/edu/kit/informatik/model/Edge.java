@@ -1,6 +1,8 @@
 package edu.kit.informatik.model;
 
 /**
+ * Die Kanten in Form von Tuple(source, destination)
+ * 
  * @author uwhlp
  * @version 1.0
  */
@@ -14,7 +16,7 @@ public class Edge implements Comparable<Edge> {
      * Konstruktor
      * 
      * @param root die Wurzel
-     * @param y das Ziel
+     * @param y    das Ziel
      */
 
     public Edge(IP root, IP y) {
