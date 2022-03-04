@@ -31,6 +31,7 @@ public class GraphParser {
      * in die Tupelnotation um.
      * 
      * @param bracketNotation Der Baum als Bracketnotation
+     * @param node die Liste mit Adressen
      * @return Gibt eine List von Tupeln zurück
      * @throws ParseException Wenn die Bracketnotation- oder die Adressenform nicht
      *                        richtig ist
