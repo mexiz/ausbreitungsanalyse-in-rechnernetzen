@@ -24,6 +24,8 @@ public class GraphFunktion extends GraphParser {
     private List<Edge> edges;
     private List<IP> nodes;
 
+    public int countGraph;
+
     /**
      * Konstruktor der die Map erzeugt.
      * 
@@ -31,6 +33,7 @@ public class GraphFunktion extends GraphParser {
 
     public GraphFunktion() {
         distance = new HashMap<>();
+        countGraph = 1;
     }
 
     /**
@@ -46,22 +49,37 @@ public class GraphFunktion extends GraphParser {
     }
 
     /**
-     * Erzeugt eine Map um die Distanze zur Wurzel zu hinterlegen
+     * Wandelt den Graph in die Bracketnotation um
      * 
-     * @param root         Die Wurzel
-     * @param prevIP       Das Übergabeobjekt für die Rekursion
-     * @param currentLevel Das Level wo sich das Objekt befindet
+     * @param root   die Wurzel
+     * @param prevIP Objekt für die Rekursion
+     * @return den Graphen in der Bracketnotation
      */
 
-    private void setDistanceMap(IP root, IP prevIP, int currentLevel) {
+    public String toBracketNotation(IP root, IP prevIP) {
+
+        if (super.getIPFromNode(nodes, root) == null) {
+            return "";
+        }
+
         List<Edge> children = getChildren(root, prevIP);
-        if(prevIP == null){
-            distance = new HashMap<>();
-        }
-        distance.put(root, currentLevel);
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("(");
+        stringBuilder.append(root.toString());
+
         for (Edge edge : children) {
-            setDistanceMap(edge.getDestination(), edge.getSource(), currentLevel + 1);
+            List<Edge> grandkids = getChildren(edge.getDestination(), root);
+            if (!grandkids.isEmpty()) {
+                stringBuilder.append(" ");
+                stringBuilder.append(toBracketNotation(edge.getDestination(), root));
+            } else {
+                stringBuilder.append(" ");
+                stringBuilder.append(edge.getDestination().toString());
+            }
+
         }
+        stringBuilder.append(")");
+        return stringBuilder.toString();
     }
 
     /**
@@ -107,26 +125,6 @@ public class GraphFunktion extends GraphParser {
             Collections.sort(levels.get(entry.getValue()));
         }
         return levels;
-    }
-
-    /**
-     * Hilfsmethode um die Kanten zufinden die mit der IP verbunden sind
-     * 
-     * @param parent Adresse von den die Kante gesucht werden sollen
-     * @param prevIP die Adresse die Ignoriert werden soll
-     * @return die Liste mit den Kanten
-     */
-
-    private List<Edge> getChildren(IP parent, IP prevIP) {
-        List<Edge> children = new ArrayList<>();
-
-        for (Edge edge : this.edges) {
-            if (edge.doSourceContain(parent) && !edge.doDestinationContain(prevIP)) {
-                children.add(edge);
-            }
-        }
-        Collections.sort(children);
-        return children;
     }
 
     /**
@@ -182,45 +180,29 @@ public class GraphFunktion extends GraphParser {
 
     public boolean removeEdge(final IP ip1, final IP ip2) {
 
-        Edge one = getEdge(ip1, ip2);
-        Edge reversed = getEdge(ip2, ip1);
+        Edge one = getEdgeFromList(ip1, ip2);
+        Edge reversed = getEdgeFromList(ip2, ip1);
         if ((one == null && reversed == null) || nodes.size() < 3) {
             return false;
         }
         edges.remove(one);
         edges.remove(reversed);
 
+        boolean removeGraph = false;
         if (getChildren(super.getIPFromNode(this.nodes, ip1), null).isEmpty()) {
             nodes.remove(super.getIPFromNode(this.nodes, ip1));
+            removeGraph = true;
+
         }
         if (getChildren(super.getIPFromNode(this.nodes, ip2), null).isEmpty()) {
             nodes.remove(super.getIPFromNode(this.nodes, ip2));
+            removeGraph = true;
+        }
+        if (!removeGraph) {
+            countGraph++;
         }
         return true;
 
-    }
-
-    /**
-     * Gibt die Kante aus dem Graphen aus
-     * 
-     * @param ip1 erster Knoten
-     * @param ip2 zweiter Knoten
-     * @return gibt die Kante zurück
-     */
-
-    public Edge getEdge(IP ip1, IP ip2) {
-        List<Edge> child = getChildren(ip1, null);
-        IP realIP1 = super.getIPFromNode(this.nodes, ip1);
-        IP realIP2 = super.getIPFromNode(this.nodes, ip2);
-        if (realIP1 == null || realIP2 == null) {
-            return null;
-        }
-        for (Edge edge : child) {
-            if (edge.getSource().equals(realIP1) && edge.getDestination().equals(realIP2)) {
-                return edge;
-            }
-        }
-        return null;
     }
 
     /**
@@ -233,58 +215,113 @@ public class GraphFunktion extends GraphParser {
 
     public boolean addEdge(IP ip1, IP ip2) {
 
-        Edge one = getEdge(ip1, ip2);
-        Edge reversed = getEdge(ip2, ip1);
+        IP newIP1 = getIPFromNode(this.nodes, ip1);
+        IP newIP2 = getIPFromNode(this.nodes, ip2);
+
+        if (newIP1 == null || newIP2 == null) {
+            return false;
+        } else if (newIP1.equals(newIP2)) {
+            return false;
+        } else if (countGraph < 2) {
+            return false;
+        }
+
+        Edge one = getEdgeFromList(newIP1, newIP2);
+        Edge reversed = getEdgeFromList(newIP2, newIP1);
+
         if (one != null || reversed != null) {
             return false;
         }
+
+        one = new Edge(newIP1, newIP2);
+        reversed = new Edge(newIP2, newIP1);
         this.edges.add(one);
         this.edges.add(reversed);
+        countGraph--;
+
+        if (this.isCircular()) {
+            this.edges.remove(one);
+            this.edges.remove(reversed);
+            countGraph++;
+            return false;
+        }
 
         return true;
     }
 
     /**
-     * Checkt ob der Graph ein Kreis ist
-     * @return ob es ein Kreis ist
+     * Gibt die Kante aus dem Graphen aus
+     * 
+     * @param ip1 erster Knoten
+     * @param ip2 zweiter Knoten
+     * @return gibt die Kante zurück, wenn nicht vorhanden null
      */
 
-    public boolean isCircular() {
-        return (((this.edges.size() / 2) + 1) != (this.nodes.size()));
+    public Edge getEdgeFromList(IP ip1, IP ip2) {
+
+        // Kinder von ip1
+        List<Edge> child = getChildren(ip1, null);
+        IP realIP1 = super.getIPFromNode(this.nodes, ip1);
+        IP realIP2 = super.getIPFromNode(this.nodes, ip2);
+
+        if (realIP1 == null || realIP2 == null) {
+            return null;
+        }
+        for (Edge edge : child) {
+            if (edge.getSource().equals(realIP1) && edge.getDestination().equals(realIP2)) {
+                return edge;
+            }
+        }
+        return null;
     }
 
     /**
-     * Wandelt den Graph in die Bracketnotation um
+     * Checkt ob der Graph ein Kreis ist
      * 
-     * @param root die Wurzel
-     * @param prevIP Objekt für die Rekursion
-     * @return den Graphen in der Bracketnotation
+     * @return true, wennn es ein Kreis ist
      */
 
-    public String toBracketNotation(IP root, IP prevIP) {
+    public boolean isCircular() {
+        return (((this.edges.size() / 2) + countGraph) != (this.nodes.size()));
+    }
 
-        if (super.getIPFromNode(nodes, root) == null) {
-            return "";
-        }
+    /**
+     * Erzeugt eine Map um die Distanze zur Wurzel zu hinterlegen
+     * 
+     * @param root         Die Wurzel
+     * @param prevIP       Das Übergabeobjekt für die Rekursion
+     * @param currentLevel Das Level wo sich das Objekt befindet
+     */
 
+    private void setDistanceMap(IP root, IP prevIP, int currentLevel) {
         List<Edge> children = getChildren(root, prevIP);
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("(");
-        stringBuilder.append(root.toString());
-
-        for (Edge edge : children) {
-            List<Edge> grandkids = getChildren(edge.getDestination(), root);
-            if (!grandkids.isEmpty()) {
-                stringBuilder.append(" ");
-                stringBuilder.append(toBracketNotation(edge.getDestination(), root));
-            } else {
-                stringBuilder.append(" ");
-                stringBuilder.append(edge.getDestination().toString());
-            }
-
+        if (prevIP == null) {
+            distance = new HashMap<>();
         }
-        stringBuilder.append(")");
-        return stringBuilder.toString();
+        distance.put(root, currentLevel);
+        for (Edge edge : children) {
+            setDistanceMap(edge.getDestination(), edge.getSource(), currentLevel + 1);
+        }
+    }
+
+    /**
+     * Hilfsmethode um die Kanten zufinden die mit der IP verbunden sind
+     * 
+     * @param parent Adresse von den die Kante gesucht werden sollen
+     * @param prevIP die Adresse die Ignoriert werden soll
+     * @return die Liste mit den Kanten
+     */
+
+    private List<Edge> getChildren(IP parent, IP prevIP) {
+        List<Edge> children = new ArrayList<>();
+
+        for (Edge edge : this.edges) {
+            if (edge.doSourceContain(parent) && !edge.doDestinationContain(prevIP)) {
+                children.add(edge);
+            }
+        }
+        Collections.sort(children);
+        return children;
     }
 
 }

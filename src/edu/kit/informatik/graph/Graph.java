@@ -3,6 +3,7 @@ package edu.kit.informatik.graph;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -63,9 +64,10 @@ public class Graph extends GraphFunktion {
      * @param edges Liste mit Kanten
      */
 
-    public Graph(List<IP> nodes, List<Edge> edges) {
+    public Graph(List<IP> nodes, List<Edge> edges, int countGraph) {
         this.edges = edges;
         this.nodes = nodes;
+        super.countGraph = countGraph;
         super.init(edges, nodes);
     }
 
@@ -99,13 +101,13 @@ public class Graph extends GraphFunktion {
     public Graph copy() {
         List<Edge> newEdge = new ArrayList<>();
         List<IP> newIP = new ArrayList<>();
-        for (Edge edge : edges) {
+        for (Edge edge : this.edges) {
             newEdge.add(edge.copy());
         }
         for (IP ip : nodes) {
             newIP.add(ip.copy());
         }
-        return new Graph(newIP, newEdge);
+        return new Graph(newIP, newEdge, super.countGraph);
     }
 
     /**
@@ -115,24 +117,57 @@ public class Graph extends GraphFunktion {
      * @return ob der Graph verbunden wurde
      */
 
+    /*
+     * TODO:
+     * graph count erhöhen falls man kein edge verbinen kann
+     * 
+     * 
+     * 
+     */
     public boolean mergeGraph(Graph merge) {
-        Set<IP> nodedd = new HashSet<>(nodes);
-        nodedd.addAll(merge.getNodes());
-        this.nodes = new ArrayList<>(nodedd);
+
+        // Alle neuen IP adressen um dann den countGraph zu ändern
+        Set<IP> newNodes = new HashSet<>(merge.getNodes());
+        newNodes.removeAll(this.nodes);
+
+        // Verbindet die Knoten
+        Set<IP> setNodes = new HashSet<>(nodes);
+        setNodes.addAll(merge.getNodes());
+
+        this.nodes = new ArrayList<>(setNodes);
+        this.countGraph += merge.countGraph;
+
         super.init(this.edges, this.nodes);
 
         boolean sameGraph = false;
 
-        for (Edge edge : merge.getEdges()) {
+        Iterator<Edge> iter = merge.getEdges().iterator();
+        while (iter.hasNext()) {
+            Edge edge = iter.next();
             IP source = edge.getSource();
             IP des = edge.getDestination();
 
-            if (getEdge(source, des) == null) {
+            if (getEdgeFromList(source, des) == null && getEdgeFromList(des, source) == null) {
+
+                if (newNodes.contains(source) && newNodes.contains(des)) {
+
+                    this.countGraph++;
+
+                } else if (!newNodes.contains(source) && !newNodes.contains(des)) {
+
+                    this.countGraph--;
+                }
+
                 this.edges.add(new Edge(source, des));
+                this.edges.add(new Edge(des, source));
+                //
+                // merge.removeEdge(source, des);
+                // merge.removeEdge(des, source);
                 sameGraph = true;
             }
 
         }
+
         super.init(this.edges, this.nodes);
         return sameGraph;
     }

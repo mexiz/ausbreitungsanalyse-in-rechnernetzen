@@ -120,6 +120,9 @@ public class Network {
      */
 
     public boolean disconnect(final IP ip1, final IP ip2) {
+        if (ip1 == null || ip2 == null) {
+            return false;
+        }
         return graph.removeEdge(ip1, ip2);
     }
 
@@ -132,6 +135,9 @@ public class Network {
      */
 
     public boolean connect(final IP ip1, final IP ip2) {
+        if (ip1 == null || ip2 == null) {
+            return false;
+        }
         return graph.addEdge(ip1, ip2);
     }
 
