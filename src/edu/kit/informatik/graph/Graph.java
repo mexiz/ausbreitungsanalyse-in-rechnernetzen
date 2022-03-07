@@ -18,7 +18,7 @@ import edu.kit.informatik.model.IP;
  * @version 1.0
  */
 
-public class Graph extends GraphFunktion {
+public class Graph extends GraphFunction {
 
     private List<IP> nodes;
     private List<Edge> edges;
@@ -64,10 +64,9 @@ public class Graph extends GraphFunktion {
      * @param edges Liste mit Kanten
      */
 
-    public Graph(List<IP> nodes, List<Edge> edges, int countGraph) {
+    public Graph(List<IP> nodes, List<Edge> edges) {
         this.edges = edges;
         this.nodes = nodes;
-        super.countGraph = countGraph;
         super.init(edges, nodes);
     }
 
@@ -107,7 +106,7 @@ public class Graph extends GraphFunktion {
         for (IP ip : nodes) {
             newIP.add(ip.copy());
         }
-        return new Graph(newIP, newEdge, super.countGraph);
+        return new Graph(newIP, newEdge);
     }
 
     /**
@@ -126,16 +125,12 @@ public class Graph extends GraphFunktion {
      */
     public boolean mergeGraph(Graph merge) {
 
-        // Alle neuen IP adressen um dann den countGraph zu ändern
-        Set<IP> newNodes = new HashSet<>(merge.getNodes());
-        newNodes.removeAll(this.nodes);
 
         // Verbindet die Knoten
         Set<IP> setNodes = new HashSet<>(nodes);
         setNodes.addAll(merge.getNodes());
 
         this.nodes = new ArrayList<>(setNodes);
-        this.countGraph += merge.countGraph;
 
         super.init(this.edges, this.nodes);
 
@@ -149,20 +144,9 @@ public class Graph extends GraphFunktion {
 
             if (getEdgeFromList(source, des) == null && getEdgeFromList(des, source) == null) {
 
-                if (newNodes.contains(source) && newNodes.contains(des)) {
-
-                    this.countGraph++;
-
-                } else if (!newNodes.contains(source) && !newNodes.contains(des)) {
-
-                    this.countGraph--;
-                }
-
                 this.edges.add(new Edge(source, des));
                 this.edges.add(new Edge(des, source));
-                //
-                // merge.removeEdge(source, des);
-                // merge.removeEdge(des, source);
+                
                 sameGraph = true;
             }
 

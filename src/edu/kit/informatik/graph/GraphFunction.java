@@ -18,22 +18,19 @@ import edu.kit.informatik.model.IP;
  * @version 1.0
  */
 
-public class GraphFunktion extends GraphParser {
+public class GraphFunction extends GraphParser {
 
     private Map<IP, Integer> distance;
     private List<Edge> edges;
     private List<IP> nodes;
-
-    public int countGraph;
 
     /**
      * Konstruktor der die Map erzeugt.
      * 
      */
 
-    public GraphFunktion() {
+    public GraphFunction() {
         distance = new HashMap<>();
-        countGraph = 1;
     }
 
     /**
@@ -62,13 +59,13 @@ public class GraphFunktion extends GraphParser {
             return "";
         }
 
-        List<Edge> children = getChildren(root, prevIP);
+        List<Edge> children = getChildren(this.edges, root, prevIP);
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("(");
         stringBuilder.append(root.toString());
 
         for (Edge edge : children) {
-            List<Edge> grandkids = getChildren(edge.getDestination(), root);
+            List<Edge> grandkids = getChildren(this.edges, edge.getDestination(), root);
             if (!grandkids.isEmpty()) {
                 stringBuilder.append(" ");
                 stringBuilder.append(toBracketNotation(edge.getDestination(), root));
@@ -149,7 +146,7 @@ public class GraphFunktion extends GraphParser {
 
     public List<IP> getRoute(final IP start, final IP end, IP prev) {
         List<IP> route = new ArrayList<>();
-        List<Edge> children = getChildren(start, prev);
+        List<Edge> children = getChildren(this.edges, start, prev);
         Iterator<Edge> iter = children.iterator();
         while (iter.hasNext() && route.isEmpty()) {
             Edge edge = iter.next();
@@ -189,17 +186,14 @@ public class GraphFunktion extends GraphParser {
         edges.remove(reversed);
 
         boolean removeGraph = false;
-        if (getChildren(super.getIPFromNode(this.nodes, ip1), null).isEmpty()) {
+        if (getChildren(this.edges, super.getIPFromNode(this.nodes, ip1), null).isEmpty()) {
             nodes.remove(super.getIPFromNode(this.nodes, ip1));
             removeGraph = true;
 
         }
-        if (getChildren(super.getIPFromNode(this.nodes, ip2), null).isEmpty()) {
+        if (getChildren(this.edges, super.getIPFromNode(this.nodes, ip2), null).isEmpty()) {
             nodes.remove(super.getIPFromNode(this.nodes, ip2));
             removeGraph = true;
-        }
-        if (!removeGraph) {
-            countGraph++;
         }
         return true;
 
@@ -222,8 +216,6 @@ public class GraphFunktion extends GraphParser {
             return false;
         } else if (newIP1.equals(newIP2)) {
             return false;
-        } else if (countGraph < 2) {
-            return false;
         }
 
         Edge one = getEdgeFromList(newIP1, newIP2);
@@ -237,12 +229,10 @@ public class GraphFunktion extends GraphParser {
         reversed = new Edge(newIP2, newIP1);
         this.edges.add(one);
         this.edges.add(reversed);
-        countGraph--;
 
         if (this.isCircular()) {
             this.edges.remove(one);
             this.edges.remove(reversed);
-            countGraph++;
             return false;
         }
 
@@ -260,7 +250,7 @@ public class GraphFunktion extends GraphParser {
     public Edge getEdgeFromList(IP ip1, IP ip2) {
 
         // Kinder von ip1
-        List<Edge> child = getChildren(ip1, null);
+        List<Edge> child = getChildren(this.edges, ip1, null);
         IP realIP1 = super.getIPFromNode(this.nodes, ip1);
         IP realIP2 = super.getIPFromNode(this.nodes, ip2);
 
@@ -282,7 +272,53 @@ public class GraphFunktion extends GraphParser {
      */
 
     public boolean isCircular() {
-        return (((this.edges.size() / 2) + countGraph) != (this.nodes.size()));
+        Map<IP, Integer> viseted = new HashMap<>();
+
+        List<Edge> copy = new ArrayList<>();
+        for (Edge edge : edges) {
+            copy.add(edge.copy());
+        }
+        while (!copy.isEmpty()) {
+            if (checkVisitedTwice(copy, viseted, copy.get(0).getSource(), null)) {
+                return true;
+            }
+
+        }
+
+        return false;
+    }
+
+    /**
+     * Die Hilfsmethode überprüft ob ein Knoten zweimal besucht wurde (Kreis)
+     * 
+     * 
+     * @param copy Die Liste mit den Edges
+     * @param viseted Die Map in der gespeichert wird wie oft ein Knoten besucht wurde
+     * @param root die Wurzel 
+     * @param prevIP die vorherige Adresse für die Rekursion
+     * @return {@code true} wenn ein Knoten zweimal besucht wurde
+     */
+
+    private boolean checkVisitedTwice(List<Edge> copy, Map<IP, Integer> viseted, IP root, IP prevIP) {
+
+        List<Edge> children = getChildren(copy, root, prevIP);
+
+        int countVisited = viseted.containsKey(root) ? viseted.get(root) : 0;
+        if (countVisited > 0) {
+            return true;
+        }
+        viseted.put(root, countVisited + 1);
+
+        for (Edge edge : children) {
+            if (checkVisitedTwice(copy, viseted, edge.getDestination(), root)) {
+                return true;
+            }
+
+            copy.remove(edge);
+            copy.remove(getEdgeFromList(edge.getDestination(), edge.getSource()));
+        }
+
+        return false;
     }
 
     /**
@@ -294,7 +330,7 @@ public class GraphFunktion extends GraphParser {
      */
 
     private void setDistanceMap(IP root, IP prevIP, int currentLevel) {
-        List<Edge> children = getChildren(root, prevIP);
+        List<Edge> children = getChildren(this.edges, root, prevIP);
         if (prevIP == null) {
             distance = new HashMap<>();
         }
@@ -312,10 +348,10 @@ public class GraphFunktion extends GraphParser {
      * @return die Liste mit den Kanten
      */
 
-    private List<Edge> getChildren(IP parent, IP prevIP) {
+    private List<Edge> getChildren(List<Edge> checkList, IP parent, IP prevIP) {
         List<Edge> children = new ArrayList<>();
 
-        for (Edge edge : this.edges) {
+        for (Edge edge : checkList) {
             if (edge.doSourceContain(parent) && !edge.doDestinationContain(prevIP)) {
                 children.add(edge);
             }
