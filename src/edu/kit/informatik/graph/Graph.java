@@ -46,10 +46,20 @@ public class Graph extends GraphFunction {
      */
 
     public Graph(IP root, List<IP> children) {
+
+        if (root == null || children == null) {
+            throw new RuntimeException("Error: Network creation null");
+        }
         nodes = new ArrayList<>();
         edges = new ArrayList<>();
+
+        Set<IP> duplicate = new HashSet<>();
+
         nodes.add(root);
         for (IP ip : children) {
+            if(root.equals(ip)|| !duplicate.add(ip)){
+                throw new RuntimeException("Error: Network creation null");
+            }
             nodes.add(ip);
             edges.add(new Edge(root, ip));
             edges.add(new Edge(ip, root));
@@ -116,15 +126,7 @@ public class Graph extends GraphFunction {
      * @return ob der Graph verbunden wurde
      */
 
-    /*
-     * TODO:
-     * graph count erhöhen falls man kein edge verbinen kann
-     * 
-     * 
-     * 
-     */
     public boolean mergeGraph(Graph merge) {
-
 
         // Verbindet die Knoten
         Set<IP> setNodes = new HashSet<>(nodes);
@@ -146,7 +148,7 @@ public class Graph extends GraphFunction {
 
                 this.edges.add(new Edge(source, des));
                 this.edges.add(new Edge(des, source));
-                
+
                 sameGraph = true;
             }
 

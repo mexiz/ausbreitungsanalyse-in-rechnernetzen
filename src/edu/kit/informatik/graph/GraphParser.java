@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import edu.kit.informatik.ParseException;
 import edu.kit.informatik.model.Edge;
@@ -23,83 +25,58 @@ public class GraphParser {
     private static final String SEPARATOR_IP = " ";
     private String regexByte = "(((2[0-5][0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]\\d)|([0-9])))";
     private String regexIP = "(" + regexByte + "\\.){3}" + regexByte;
-    // private String regexBracket = "[(]" + regexIP + "(\\s" + regexIP + ")+" +
-    // "[)]";
+    private String regexBracket = "[(]" + regexIP + "(\\s" + regexIP + ")" + "(\\s" + regexIP + ")*" + "[)]";
+    private String regexStart = "^([(]" + regexIP + "\\s.+)";
 
     /**
      * Die Methode wandelt den Baum, der als Bracketnotation dargestellt wird,
      * in die Tupelnotation um.
      * 
      * @param bracketNotation Der Baum als Bracketnotation
-     * @param node die Liste mit Adressen
+     * @param node            die Liste mit Adressen
      * @return Gibt eine List von Tupeln zurück
      * @throws ParseException Wenn die Bracketnotation- oder die Adressenform nicht
      *                        richtig ist
      */
 
-    public List<Edge> getEdgesFromBracketNotation(List<IP> node, final String bracketNotation) throws ParseException {
+    public List<Edge> getEdgesFromBracketNotation(List<IP> node , final String bracket) throws ParseException {
 
-        // Entfernt die äußerste Klammer
-        String bracket = bracketNotation.substring(1, bracketNotation.length() - 1);
-        List<String> splitted = new ArrayList<>(Arrays.asList(bracket.split(SEPARATOR_IP)));
-        List<Edge> table = new ArrayList<>();
+        
+        List<Edge> ed = new ArrayList<>();
+        String test = bracket;
 
-        String root = splitted.get(0);
-        int i = 1;
+        if(!test.matches(regexStart)){
+            throw new ParseException("message");
+        }
 
-        // Solange bis die Liste splitted nur noch den Root hat
-        while (i < splitted.size()) {
-            String ip = splitted.get(i);
-            if (ip.charAt(0) == '(') {
-                IP ip1 = getIPFromNode(node, new IP(root));
-                IP ip2 = getIPFromNode(node, new IP(ip.substring(1)));
-                table.add(new Edge(ip1, ip2));
-                table.add(new Edge(ip2, ip1));
-                int end = this.indexBracketClosed(splitted, i);
+        Pattern pat = Pattern.compile(regexBracket);
 
-                // Rekursion um eine Ebene tiefer in den Graphen zu kommen
-                List<Edge> supTuples = this.getEdgesFromBracketNotation(node, this.toString(splitted, i, end));
-                table.addAll(supTuples);
+        while (!test.matches(regexIP)) {
 
-                // Löscht die Subliste
-                splitted.subList(i, end).clear();
-            } else if (ip.charAt(ip.length() - 1) == ')') {
-                ip = ip.substring(0, ip.length() - 1);
-                IP ip1 = getIPFromNode(node, new IP(root));
-                IP ip2 = getIPFromNode(node, new IP(ip));
-                table.add(new Edge(ip1, ip2));
-                table.add(new Edge(ip2, ip1));
-                splitted.remove(i);
-            } else {
-                IP ip1 = getIPFromNode(node, new IP(root));
-                IP ip2 = getIPFromNode(node, new IP(ip));
-                table.add(new Edge(ip1, ip2));
-                table.add(new Edge(ip2, ip1));
-                splitted.remove(i);
+            Matcher mat = pat.matcher(test);
+            if (mat.find()) {
+                String sub = mat.group();
+                sub = sub.replace("(", "");
+                sub = sub.replace(")", "");
+
+                String[] splitted = sub.split(" ");
+
+                for (int i = 1; i < splitted.length; i++) {
+
+                    IP ip1 = getIPFromNode(node, new IP(splitted[0]));
+                    IP ip2 = getIPFromNode(node, new IP(splitted[i]));
+
+                    ed.add(new Edge(ip1, ip2));
+                    ed.add(new Edge(ip2, ip1));
+                }
+
+                test = test.replaceFirst(regexBracket, splitted[0]);
+            }else {
+
+                throw new ParseException("Error: Wrong bracketnotation");
             }
         }
-        return table;
-    }
-
-    /**
-     * Gibt die Adresse aus die sich in der Liste befindet.
-     * 
-     * @param nodes  Die Liste mit den Knotenpunkten
-     * @param adress Die Adresse die gesucht werden soll
-     * @return null wenn die Adresse nicht vorhanden ist und die IP wenn sie
-     *         vorhanden ist
-     */
-
-    public IP getIPFromNode(List<IP> nodes, IP adress) {
-        if (adress == null) {
-            return null;
-        }
-        for (IP ip : nodes) {
-            if (ip.compareTo(adress) == 0) {
-                return ip;
-            }
-        }
-        return null;
+        return ed;
     }
 
     /**
@@ -130,58 +107,24 @@ public class GraphParser {
     }
 
     /**
-     * Die Hilfsmethode gibt den Index zurück, wo sich der Substrang vom Baum
-     * schließt.
+     * Gibt die Adresse aus die sich in der Liste befindet.
      * 
-     * @param list  Die Liste mit den Addressen von der Bracketnotation
-     * @param start Der Startwert, wo der Substrang begonnen hat
-     * @return git den Index zurück
+     * @param nodes  Die Liste mit den Knotenpunkten
+     * @param adress Die Adresse die gesucht werden soll
+     * @return null wenn die Adresse nicht vorhanden ist und die IP wenn sie
+     *         vorhanden ist
      */
 
-    private int indexBracketClosed(List<String> list, int start) {
-
-        int openBracket = 0;
-        int closedBracket = 0;
-
-        int i = start;
-
-        do {
-            String ip = list.get(i);
-            if (ip.charAt(0) == '(') {
-                openBracket++;
-                ip = ip.substring(1);
-            }
-            ip = ip.replaceAll(regexIP, "");
-            closedBracket += ip.length();
-            i++;
-        } while (openBracket != closedBracket);
-
-        return i;
-    }
-
-    /**
-     * Die Hilfsmethode verbindet die durch den {@link GraphParser#SEPARATOR_IP}
-     * getrennte Liste zusammen.
-     * 
-     * @param list  Die durch ein {@link GraphParser#SEPARATOR_IP} getrennte Liste
-     * @param start Startwert der Liste
-     * @param end   Endwert der Liste
-     * @return Gibt den zusammengesetzten String zurück
-     */
-
-    private String toString(List<String> list, int start, int end) {
-
-        List<String> l = list.subList(start, end);
-
-        StringBuilder sb = new StringBuilder();
-
-        for (int i = 0; i < l.size() - 1; i++) {
-            sb.append(l.get(i));
-            sb.append(SEPARATOR_IP);
+    public IP getIPFromNode(List<IP> nodes, IP adress) {
+        if (adress == null) {
+            return null;
         }
-
-        sb.append(l.get(l.size() - 1));
-        return sb.toString();
+        for (IP ip : nodes) {
+            if (ip.compareTo(adress) == 0) {
+                return ip;
+            }
+        }
+        return null;
     }
 
 }
