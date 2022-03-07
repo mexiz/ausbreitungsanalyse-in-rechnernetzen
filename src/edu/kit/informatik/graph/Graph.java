@@ -57,7 +57,7 @@ public class Graph extends GraphFunction {
 
         nodes.add(root);
         for (IP ip : children) {
-            if(root.equals(ip)|| !duplicate.add(ip)){
+            if (root.equals(ip) || !duplicate.add(ip)) {
                 throw new RuntimeException("Error: Network creation null");
             }
             nodes.add(ip);

@@ -1,7 +1,6 @@
 package edu.kit.informatik.graph;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,20 +31,19 @@ public class GraphParser {
      * Die Methode wandelt den Baum, der als Bracketnotation dargestellt wird,
      * in die Tupelnotation um.
      * 
-     * @param bracketNotation Der Baum als Bracketnotation
      * @param node            die Liste mit Adressen
-     * @return Gibt eine List von Tupeln zurück
+     * @param bracketNotation Der Baum als Bracketnotation
+     * @return Gibt eine List von Kanten zurück
      * @throws ParseException Wenn die Bracketnotation- oder die Adressenform nicht
      *                        richtig ist
      */
 
-    public List<Edge> getEdgesFromBracketNotation(List<IP> node , final String bracket) throws ParseException {
+    public List<Edge> getEdgesFromBracketNotation(List<IP> node, final String bracketNotation) throws ParseException {
 
-        
         List<Edge> ed = new ArrayList<>();
-        String test = bracket;
+        String test = bracketNotation;
 
-        if(!test.matches(regexStart)){
+        if (!test.matches(regexStart)) {
             throw new ParseException("message");
         }
 
@@ -71,7 +69,7 @@ public class GraphParser {
                 }
 
                 test = test.replaceFirst(regexBracket, splitted[0]);
-            }else {
+            } else {
 
                 throw new ParseException("Error: Wrong bracketnotation");
             }

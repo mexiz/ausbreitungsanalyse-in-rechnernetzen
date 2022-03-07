@@ -25,7 +25,7 @@ public class Network {
      * @param children Die Knoten
      */
 
-    public Network(final IP root, final List<IP> children){
+    public Network(final IP root, final List<IP> children) {
         graph = new Graph(root, children);
     }
 
@@ -38,7 +38,7 @@ public class Network {
      */
 
     public Network(final String bracketNotation) throws ParseException {
-        if(bracketNotation == null){
+        if (bracketNotation == null) {
             throw new ParseException("message");
         }
         graph = new Graph(bracketNotation);
