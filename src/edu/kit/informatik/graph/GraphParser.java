@@ -37,13 +37,13 @@ public class GraphParser {
      *                        richtig ist
      */
 
-    public List<Edge> getEdgesFromBracketNotation(List<IP> node, final String bracketNotation) throws ParseException {
+    public List<Edge> setEdgesFromNotation(List<IP> node, final String bracketNotation) throws ParseException {
 
         List<Edge> edges = new ArrayList<>();
         String notation = bracketNotation;
 
         if (!notation.matches(regexStart)) {
-            throw new ParseException("message");
+            throw new ParseException("Error: Wrong bracketnotation");
         }
 
         Pattern pat = Pattern.compile(regexBracket);
@@ -62,15 +62,9 @@ public class GraphParser {
 
                     IP one = getAdressFromList(node, new IP(splitted[0]));
                     IP two = getAdressFromList(node, new IP(splitted[i]));
-                    // IP one = new IP(splitted[0]);
-                    // one = node.indexOf(one) < 0 ? null : node.get(node.indexOf(one));
-                    // IP two = new IP(splitted[i]);
-                    // one = node.indexOf(two) < 0 ? null : node.get(node.indexOf(two));
-
                     edges.add(new Edge(one, two));
                     edges.add(new Edge(two, one));
                 }
-
                 notation = notation.replaceFirst(regexBracket, splitted[0]);
             } else {
 
@@ -117,7 +111,7 @@ public class GraphParser {
      */
 
     public IP getAdressFromList(List<IP> nodes, IP adress) {
-        return  nodes.indexOf(adress) < 0 ? null : nodes.get(nodes.indexOf(adress));
+        return nodes.indexOf(adress) < 0 ? null : nodes.get(nodes.indexOf(adress));
     }
 
 }

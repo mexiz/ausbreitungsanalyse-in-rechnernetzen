@@ -29,13 +29,13 @@ public class IP implements Comparable<IP> {
     public IP(final String pointNotation) throws ParseException {
 
         if (!pointNotation.matches(regexIP)) {
-            throw new ParseException("Error: Invalid IP form");
+            throw new ParseException("Error: IP do not match the form");
         }
 
         String[] adressString = pointNotation.split("\\.");
 
         if (adressString.length != maxAdressBytes) {
-            throw new ParseException("Invalid IP-Adress!");
+            throw new ParseException("Error: Invalid IP-Adress!");
         }
         adress = new int[adressString.length];
 

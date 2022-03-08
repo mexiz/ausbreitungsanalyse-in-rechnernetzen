@@ -39,7 +39,7 @@ public class Network {
 
     public Network(final String bracketNotation) throws ParseException {
         if (bracketNotation == null) {
-            throw new ParseException("message");
+            throw new ParseException("Error: bracketNotation is null");
         }
         graph = new Graph(bracketNotation);
     }
