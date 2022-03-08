@@ -141,7 +141,7 @@ public class Network {
         if (ip1 == null || ip2 == null) {
             return false;
         }
-        return graph.addEdge(ip1, ip2);
+        return graph.createEdge(ip1, ip2);
     }
 
     /**

@@ -55,7 +55,7 @@ public class GraphFunction extends GraphParser {
 
     public String toBracketNotation(IP root, IP prevIP) {
 
-        if (super.getIPFromNode(nodes, root) == null) {
+        if (super.getAdressFromList(nodes, root) == null) {
             return "";
         }
 
@@ -87,7 +87,7 @@ public class GraphFunction extends GraphParser {
      */
 
     public int getHeight(IP root) {
-        IP nodeIP = getIPFromNode(this.nodes, root);
+        IP nodeIP = getAdressFromList(this.nodes, root);
         if (nodeIP == null) {
             this.distance = new HashMap<>();
             return -1;
@@ -177,23 +177,23 @@ public class GraphFunction extends GraphParser {
 
     public boolean removeEdge(final IP ip1, final IP ip2) {
 
-        Edge one = getEdgeFromList(ip1, ip2);
-        Edge reversed = getEdgeFromList(ip2, ip1);
+        IP firstIP = ip1;
+        IP secondIP = ip2;
+
+        Edge one = getEdgeFromList(firstIP, secondIP);
+        Edge reversed = getEdgeFromList(secondIP, firstIP);
         if ((one == null && reversed == null) || nodes.size() < 3) {
             return false;
         }
         edges.remove(one);
         edges.remove(reversed);
-
-        boolean removeGraph = false;
-        if (getChildren(this.edges, super.getIPFromNode(this.nodes, ip1), null).isEmpty()) {
-            nodes.remove(super.getIPFromNode(this.nodes, ip1));
-            removeGraph = true;
+        
+        if (getChildren(this.edges, super.getAdressFromList(this.nodes, ip1), null).isEmpty()) {
+            nodes.remove(super.getAdressFromList(this.nodes, ip1));
 
         }
-        if (getChildren(this.edges, super.getIPFromNode(this.nodes, ip2), null).isEmpty()) {
-            nodes.remove(super.getIPFromNode(this.nodes, ip2));
-            removeGraph = true;
+        if (getChildren(this.edges, super.getAdressFromList(this.nodes, ip2), null).isEmpty()) {
+            nodes.remove(super.getAdressFromList(this.nodes, ip2));
         }
         return true;
 
@@ -207,10 +207,10 @@ public class GraphFunction extends GraphParser {
      * @return gibt zurück ob die Kante gesetzt wurde
      */
 
-    public boolean addEdge(IP ip1, IP ip2) {
+    public boolean createEdge(IP ip1, IP ip2) {
 
-        IP newIP1 = getIPFromNode(this.nodes, ip1);
-        IP newIP2 = getIPFromNode(this.nodes, ip2);
+        IP newIP1 = getAdressFromList(this.nodes, ip1);
+        IP newIP2 = getAdressFromList(this.nodes, ip2);
 
         if (newIP1 == null || newIP2 == null) {
             return false;
@@ -251,8 +251,8 @@ public class GraphFunction extends GraphParser {
 
         // Kinder von ip1
         List<Edge> child = getChildren(this.edges, ip1, null);
-        IP realIP1 = super.getIPFromNode(this.nodes, ip1);
-        IP realIP2 = super.getIPFromNode(this.nodes, ip2);
+        IP realIP1 = super.getAdressFromList(this.nodes, ip1);
+        IP realIP2 = super.getAdressFromList(this.nodes, ip2);
 
         if (realIP1 == null || realIP2 == null) {
             return null;

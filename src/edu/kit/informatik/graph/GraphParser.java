@@ -21,7 +21,6 @@ import edu.kit.informatik.model.IP;
 
 public class GraphParser {
 
-    private static final String SEPARATOR_IP = " ";
     private String regexByte = "(((2[0-5][0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]\\d)|([0-9])))";
     private String regexIP = "(" + regexByte + "\\.){3}" + regexByte;
     private String regexBracket = "[(]" + regexIP + "(\\s" + regexIP + ")" + "(\\s" + regexIP + ")*" + "[)]";
@@ -40,41 +39,45 @@ public class GraphParser {
 
     public List<Edge> getEdgesFromBracketNotation(List<IP> node, final String bracketNotation) throws ParseException {
 
-        List<Edge> ed = new ArrayList<>();
-        String test = bracketNotation;
+        List<Edge> edges = new ArrayList<>();
+        String notation = bracketNotation;
 
-        if (!test.matches(regexStart)) {
+        if (!notation.matches(regexStart)) {
             throw new ParseException("message");
         }
 
         Pattern pat = Pattern.compile(regexBracket);
 
-        while (!test.matches(regexIP)) {
+        while (!notation.matches(regexIP)) {
 
-            Matcher mat = pat.matcher(test);
+            Matcher mat = pat.matcher(notation);
             if (mat.find()) {
-                String sub = mat.group();
-                sub = sub.replace("(", "");
-                sub = sub.replace(")", "");
+                String innerBracket = mat.group();
+                innerBracket = innerBracket.replace("(", "");
+                innerBracket = innerBracket.replace(")", "");
 
-                String[] splitted = sub.split(" ");
+                String[] splitted = innerBracket.split(" ");
 
                 for (int i = 1; i < splitted.length; i++) {
 
-                    IP ip1 = getIPFromNode(node, new IP(splitted[0]));
-                    IP ip2 = getIPFromNode(node, new IP(splitted[i]));
+                    IP one = getAdressFromList(node, new IP(splitted[0]));
+                    IP two = getAdressFromList(node, new IP(splitted[i]));
+                    // IP one = new IP(splitted[0]);
+                    // one = node.indexOf(one) < 0 ? null : node.get(node.indexOf(one));
+                    // IP two = new IP(splitted[i]);
+                    // one = node.indexOf(two) < 0 ? null : node.get(node.indexOf(two));
 
-                    ed.add(new Edge(ip1, ip2));
-                    ed.add(new Edge(ip2, ip1));
+                    edges.add(new Edge(one, two));
+                    edges.add(new Edge(two, one));
                 }
 
-                test = test.replaceFirst(regexBracket, splitted[0]);
+                notation = notation.replaceFirst(regexBracket, splitted[0]);
             } else {
 
                 throw new ParseException("Error: Wrong bracketnotation");
             }
         }
-        return ed;
+        return edges;
     }
 
     /**
@@ -113,16 +116,8 @@ public class GraphParser {
      *         vorhanden ist
      */
 
-    public IP getIPFromNode(List<IP> nodes, IP adress) {
-        if (adress == null) {
-            return null;
-        }
-        for (IP ip : nodes) {
-            if (ip.compareTo(adress) == 0) {
-                return ip;
-            }
-        }
-        return null;
+    public IP getAdressFromList(List<IP> nodes, IP adress) {
+        return  nodes.indexOf(adress) < 0 ? null : nodes.get(nodes.indexOf(adress));
     }
 
 }
