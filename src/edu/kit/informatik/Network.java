@@ -16,8 +16,8 @@ import edu.kit.informatik.model.IP;
 
 public class Network {
 
-    private final static String ERROR_INPUT_NULL = "Error: Input is null";
-    private final static int MIN_HEIGHT = 0;
+    private static final String ERROR_INPUT_NULL = "Error: Input is null";
+    private static final int MIN_HEIGHT = 0;
 
     private Graph graph;
 

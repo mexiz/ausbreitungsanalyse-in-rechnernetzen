@@ -20,14 +20,14 @@ import edu.kit.informatik.model.IP;
 
 public class GraphFunction extends GraphParser {
 
-    private final static String IP_SEPARATOR = " ";
+    private static final String IP_SEPARATOR = " ";
 
-    private final static int FIRST_ELEMENT = 0;
-    private final static int MIN_NODES_DISCONNECT = 3;
-    private final static int WRONG_ROOT_HEIGHT = -1;
-    private final static int START_VALUE = 0;
-    private final static int START_VALUE_VISITED = 0;
-    private final static int ADD_ONE = 1;
+    private static final int FIRST_ELEMENT = 0;
+    private static final int MIN_NODES_DISCONNECT = 3;
+    private static final int WRONG_ROOT_HEIGHT = -1;
+    private static final int START_VALUE = 0;
+    private static final int START_VALUE_VISITED = 0;
+    private static final int ADD_ONE = 1;
 
     private Map<IP, Integer> distance;
     private List<Edge> edges;

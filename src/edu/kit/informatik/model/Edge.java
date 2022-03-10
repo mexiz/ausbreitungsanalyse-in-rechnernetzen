@@ -9,7 +9,7 @@ package edu.kit.informatik.model;
 
 public class Edge implements Comparable<Edge> {
 
-    private final static int VALUE_EQUAL = 0;
+    private static final int VALUE_EQUAL = 0;
 
     private IP source;
     private IP destination;
