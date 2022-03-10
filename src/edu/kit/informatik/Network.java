@@ -16,6 +16,9 @@ import edu.kit.informatik.model.IP;
 
 public class Network {
 
+    private static final String ERROR_INPUT_NULL = "Error: Input is null";
+    private static final int MIN_HEIGHT = 0;
+
     private Graph graph;
 
     /**
@@ -39,7 +42,7 @@ public class Network {
 
     public Network(final String bracketNotation) throws ParseException {
         if (bracketNotation == null) {
-            throw new ParseException("Error: bracketNotation is null");
+            throw new ParseException(ERROR_INPUT_NULL);
         }
         graph = new Graph(bracketNotation);
     }
@@ -78,8 +81,8 @@ public class Network {
 
     public int getHeight(final IP root) {
         int height = graph.getHeight(root);
-        if (height < 0) {
-            return 0;
+        if (height < MIN_HEIGHT) {
+            return MIN_HEIGHT;
         }
         return graph.getHeight(root);
     }
