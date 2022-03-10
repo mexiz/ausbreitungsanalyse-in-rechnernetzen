@@ -21,12 +21,19 @@ import edu.kit.informatik.model.IP;
 
 public class GraphParser {
 
-    private String regexByte = "(((2[0-5][0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]\\d)|([0-9])))";
-    private String regexIP = "(" + regexByte + "\\.){3}" + regexByte;
+    private static final String REGEX_BYTE = "(((2[0-5][0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]\\d)|([0-9])))";
+    private static final String REGEX_IP = "(" + REGEX_BYTE + "\\.){3}" + REGEX_BYTE;
 
+    private static final String REGEX_BRACKET = "[(]" + REGEX_IP + "(" + "\\s" + REGEX_IP + ")+" + "[)]";
+    private static final String REGEX_BRACKET_NODES = "(" + REGEX_IP + "\\s)*" + REGEX_IP;
+    private static final String REGEX_START = "^([(]" + REGEX_IP + "\\s.+)";
 
-    private String regexBracket = "[(]" + regexIP + "(\\s" + regexIP + ")+" + "[)]";
-    private String regexStart = "^([(]" + regexIP + "\\s.+)";
+    private static final String IP_SEPARATOR = " ";
+
+    private static final int FIRST_ELEMENT = 0;
+
+    private static final String ERROR_BRACKETNOTATION = "Error: Wrong bracketnotation";
+    private static final String ERROR_TREE = "Error: Tree is circle";
 
     /**
      * Die Methode wandelt den Baum, der als Bracketnotation dargestellt wird,
@@ -44,13 +51,13 @@ public class GraphParser {
         List<Edge> edges = new ArrayList<>();
         String notation = bracketNotation;
 
-        if (!notation.matches(regexStart)) {
-            throw new ParseException("Error: Wrong bracketnotation");
+        if (!notation.matches(REGEX_START)) {
+            throw new ParseException(ERROR_BRACKETNOTATION);
         }
 
-        Pattern pat = Pattern.compile(regexBracket);
+        Pattern pat = Pattern.compile(REGEX_BRACKET);
 
-        while (!notation.matches(regexIP)) {
+        while (!notation.matches(REGEX_IP)) {
 
             Matcher mat = pat.matcher(notation);
             if (mat.find()) {
@@ -58,19 +65,19 @@ public class GraphParser {
                 innerBracket = innerBracket.replace("(", "");
                 innerBracket = innerBracket.replace(")", "");
 
-                String[] splitted = innerBracket.split(" ");
+                String[] splitted = innerBracket.split(IP_SEPARATOR);
 
                 for (int i = 1; i < splitted.length; i++) {
 
-                    IP one = getAdressFromList(node, new IP(splitted[0]));
+                    IP one = getAdressFromList(node, new IP(splitted[FIRST_ELEMENT]));
                     IP two = getAdressFromList(node, new IP(splitted[i]));
                     edges.add(new Edge(one, two));
                     edges.add(new Edge(two, one));
                 }
-                notation = notation.replaceFirst(regexBracket, splitted[0]);
+                notation = notation.replaceFirst(REGEX_BRACKET, splitted[FIRST_ELEMENT]);
             } else {
 
-                throw new ParseException("Error: Wrong bracketnotation");
+                throw new ParseException(ERROR_BRACKETNOTATION);
             }
         }
         return edges;
@@ -88,15 +95,15 @@ public class GraphParser {
     public List<IP> getNodesFromBracketNotation(String bracketNotation) throws ParseException {
         String withoutBrackets = bracketNotation.replace("(", "");
         withoutBrackets = withoutBrackets.replace(")", "");
-        if (!withoutBrackets.matches("(" + regexIP + "\\s)*" + regexIP)) {
-            throw new ParseException("Error: Invalid Bracketnotation Form");
+        if (!withoutBrackets.matches(REGEX_BRACKET_NODES)) {
+            throw new ParseException(ERROR_BRACKETNOTATION);
         }
-        String[] splitted = withoutBrackets.split(" ");
+        String[] splitted = withoutBrackets.split(IP_SEPARATOR);
         List<IP> returnList = new ArrayList<>();
         Set<String> duplicatTester = new HashSet<>();
         for (String adress : splitted) {
             if (!duplicatTester.add(adress)) {
-                throw new ParseException("Error: Tree is circle");
+                throw new ParseException(ERROR_TREE);
             }
             returnList.add(new IP(adress));
         }
