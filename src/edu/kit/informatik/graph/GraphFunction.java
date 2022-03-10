@@ -20,6 +20,15 @@ import edu.kit.informatik.model.IP;
 
 public class GraphFunction extends GraphParser {
 
+    private static final String IP_SEPARATOR = " ";
+
+    private static final int FIRST_ELEMENT = 0;
+    private static final int MIN_NODES_DISCONNECT = 3;
+    private static final int WRONG_ROOT_HEIGHT = -1;
+    private static final int START_VALUE = 0;
+    private static final int START_VALUE_VISITED = 0;
+    private static final int ADD_ONE = 1;
+
     private Map<IP, Integer> distance;
     private List<Edge> edges;
     private List<IP> nodes;
@@ -67,10 +76,10 @@ public class GraphFunction extends GraphParser {
         for (Edge edge : children) {
             List<Edge> grandkids = getChildren(this.edges, edge.getDestination(), root);
             if (!grandkids.isEmpty()) {
-                stringBuilder.append(" ");
+                stringBuilder.append(IP_SEPARATOR);
                 stringBuilder.append(toBracketNotation(edge.getDestination(), root));
             } else {
-                stringBuilder.append(" ");
+                stringBuilder.append(IP_SEPARATOR);
                 stringBuilder.append(edge.getDestination().toString());
             }
 
@@ -90,10 +99,10 @@ public class GraphFunction extends GraphParser {
         IP nodeIP = getAdressFromList(this.nodes, root);
         if (nodeIP == null) {
             this.distance = new HashMap<>();
-            return -1;
+            return WRONG_ROOT_HEIGHT;
         }
-        this.setDistanceMap(root, null, 0);
-        int max = 0;
+        this.setDistanceMap(root, null, START_VALUE);
+        int max = START_VALUE;
 
         for (Map.Entry<IP, Integer> entry : distance.entrySet()) {
             if (entry.getValue() > max) {
@@ -112,7 +121,7 @@ public class GraphFunction extends GraphParser {
 
     public List<List<IP>> getLevels(IP root) {
         List<List<IP>> levels = new ArrayList<>();
-        int numberOfLevels = getHeight(root) + 1;
+        int numberOfLevels = getHeight(root) + ADD_ONE;
         for (int i = 0; i < numberOfLevels; i++) {
             List<IP> level = new ArrayList<>();
             levels.add(level);
@@ -182,12 +191,12 @@ public class GraphFunction extends GraphParser {
 
         Edge one = getEdgeFromList(firstIP, secondIP);
         Edge reversed = getEdgeFromList(secondIP, firstIP);
-        if ((one == null && reversed == null) || nodes.size() < 3) {
+        if ((one == null && reversed == null) || nodes.size() < MIN_NODES_DISCONNECT) {
             return false;
         }
         edges.remove(one);
         edges.remove(reversed);
-        
+
         if (getChildren(this.edges, super.getAdressFromList(this.nodes, ip1), null).isEmpty()) {
             nodes.remove(super.getAdressFromList(this.nodes, ip1));
 
@@ -279,7 +288,7 @@ public class GraphFunction extends GraphParser {
             copy.add(edge.copy());
         }
         while (!copy.isEmpty()) {
-            if (checkVisitedTwice(copy, viseted, copy.get(0).getSource(), null)) {
+            if (checkVisitedTwice(copy, viseted, copy.get(FIRST_ELEMENT).getSource(), null)) {
                 return true;
             }
 
@@ -292,30 +301,31 @@ public class GraphFunction extends GraphParser {
      * Die Hilfsmethode überprüft ob ein Knoten zweimal besucht wurde (Kreis)
      * 
      * 
-     * @param copy Die Liste mit den Edges
-     * @param viseted Die Map in der gespeichert wird wie oft ein Knoten besucht wurde
-     * @param root die Wurzel 
-     * @param prevIP die vorherige Adresse für die Rekursion
+     * @param copy    Die Liste mit den Edges
+     * @param viseted Die Map in der gespeichert wird wie oft ein Knoten besucht
+     *                wurde
+     * @param root    die Wurzel
+     * @param prevIP  die vorherige Adresse für die Rekursion
      * @return {@code true} wenn ein Knoten zweimal besucht wurde
      */
 
-    private boolean checkVisitedTwice(List<Edge> copy, Map<IP, Integer> viseted, IP root, IP prevIP) {
+    private boolean checkVisitedTwice(List<Edge> copyOfEdges, Map<IP, Integer> visetedMap, IP root, IP prevIP) {
 
-        List<Edge> children = getChildren(copy, root, prevIP);
+        List<Edge> children = getChildren(copyOfEdges, root, prevIP);
 
-        int countVisited = viseted.containsKey(root) ? viseted.get(root) : 0;
-        if (countVisited > 0) {
+        int countVisited = visetedMap.containsKey(root) ? visetedMap.get(root) : START_VALUE_VISITED;
+        if (countVisited > START_VALUE_VISITED) {
             return true;
         }
-        viseted.put(root, countVisited + 1);
+        visetedMap.put(root, countVisited + ADD_ONE);
 
         for (Edge edge : children) {
-            if (checkVisitedTwice(copy, viseted, edge.getDestination(), root)) {
+            if (checkVisitedTwice(copyOfEdges, visetedMap, edge.getDestination(), root)) {
                 return true;
             }
 
-            copy.remove(edge);
-            copy.remove(getEdgeFromList(edge.getDestination(), edge.getSource()));
+            copyOfEdges.remove(edge);
+            copyOfEdges.remove(getEdgeFromList(edge.getDestination(), edge.getSource()));
         }
 
         return false;
@@ -336,7 +346,7 @@ public class GraphFunction extends GraphParser {
         }
         distance.put(root, currentLevel);
         for (Edge edge : children) {
-            setDistanceMap(edge.getDestination(), edge.getSource(), currentLevel + 1);
+            setDistanceMap(edge.getDestination(), edge.getSource(), currentLevel + ADD_ONE);
         }
     }
 
