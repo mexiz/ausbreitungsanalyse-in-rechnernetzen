@@ -34,7 +34,7 @@ public class Graph extends GraphFunction {
 
     public Graph(String bracketnotation) throws ParseException {
 
-        this.nodes = getNodesFromBracketNotation(bracketnotation);
+        this.nodes = getNodesFromBracketNotation(bracketnotation); 
         this.edges = setEdgesFromNotation(this.nodes, bracketnotation);
         super.init(edges, nodes);
 
