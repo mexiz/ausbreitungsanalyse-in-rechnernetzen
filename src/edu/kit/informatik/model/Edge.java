@@ -9,6 +9,8 @@ package edu.kit.informatik.model;
 
 public class Edge implements Comparable<Edge> {
 
+    private static final int VALUE_EQUAL = 0;
+
     private IP source;
     private IP destination;
 
@@ -54,7 +56,7 @@ public class Edge implements Comparable<Edge> {
         if (ip == null) {
             return false;
         }
-        return source.compareTo(ip) == 0;
+        return source.compareTo(ip) == VALUE_EQUAL;
     }
 
     /**
@@ -68,7 +70,7 @@ public class Edge implements Comparable<Edge> {
         if (ip == null) {
             return false;
         }
-        return destination.compareTo(ip) == 0;
+        return destination.compareTo(ip) == VALUE_EQUAL;
     }
 
     /**
@@ -116,6 +118,5 @@ public class Edge implements Comparable<Edge> {
             return false;
         return true;
     }
-
 
 }

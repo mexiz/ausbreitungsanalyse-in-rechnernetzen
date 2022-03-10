@@ -15,10 +15,18 @@ public class IP implements Comparable<IP> {
 
     private int[] adress;
 
-    private final int maxAdressBytes = 4;
+    private static final int MAX_ADDRESS_BYTES = 4;
 
-    private String regexByte = "(((2[0-5][0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]\\d)|([0-9])))";
-    private String regexIP = "(" + regexByte + "\\.){3}" + regexByte;
+    private static final String REGEX_BYTE = "(((2[0-5][0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]\\d)|([0-9])))";
+    private static final String REGEX_IP = "(" + REGEX_BYTE + "\\.){3}" + REGEX_BYTE;
+
+    private static final String ERROR_IP_INVALID = "Error: Invalid IP-Adress!";
+
+    private static final String BYTE_SEPARATOR = ".";
+
+    private static final int COMPARE_SMALLER = -1;
+    private static final int COMPARE_HIGHER = 1;
+    private static final int COMPARE_EQUAL = 0;
 
     /**
      * Konstruktor mit der Pointnotation
@@ -28,14 +36,14 @@ public class IP implements Comparable<IP> {
      */
     public IP(final String pointNotation) throws ParseException {
 
-        if (!pointNotation.matches(regexIP)) {
-            throw new ParseException("Error: IP do not match the form");
+        if (!pointNotation.matches(REGEX_IP)) {
+            throw new ParseException(ERROR_IP_INVALID);
         }
 
         String[] adressString = pointNotation.split("\\.");
 
-        if (adressString.length != maxAdressBytes) {
-            throw new ParseException("Error: Invalid IP-Adress!");
+        if (adressString.length != MAX_ADDRESS_BYTES) {
+            throw new ParseException(ERROR_IP_INVALID);
         }
         adress = new int[adressString.length];
 
@@ -61,7 +69,7 @@ public class IP implements Comparable<IP> {
 
         StringBuilder stringBuilder = new StringBuilder(String.valueOf(this.adress[0]));
         for (int i = 1; i < adress.length; i++) {
-            stringBuilder.append(".");
+            stringBuilder.append(BYTE_SEPARATOR);
             stringBuilder.append(this.adress[i]);
         }
         return stringBuilder.toString();
@@ -71,41 +79,42 @@ public class IP implements Comparable<IP> {
     public int compareTo(IP o) {
         for (int i = 0; i < adress.length; i++) {
             if (o.adress[i] < this.adress[i]) {
-                return 1;
+                return COMPARE_HIGHER;
             }
             if (o.adress[i] > this.adress[i]) {
-                return -1;
+                return COMPARE_SMALLER;
             }
         }
-        return 0;
+        return COMPARE_EQUAL;
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
+        result = prime * result + MAX_ADDRESS_BYTES;
         result = prime * result + Arrays.hashCode(adress);
-        result = prime * result + ((regexByte == null) ? 0 : regexByte.hashCode());
-        result = prime * result + ((regexIP == null) ? 0 : regexIP.hashCode());
         return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         IP other = (IP) obj;
-        if (!Arrays.equals(adress, other.adress))
+        if (MAX_ADDRESS_BYTES != other.MAX_ADDRESS_BYTES) {
             return false;
-        if (regexIP == null) {
-            if (other.regexIP != null)
-                return false;
-        } else if (!regexIP.equals(other.regexIP))
+        }
+        if (!Arrays.equals(adress, other.adress)) {
             return false;
+        }
         return true;
     }
 
