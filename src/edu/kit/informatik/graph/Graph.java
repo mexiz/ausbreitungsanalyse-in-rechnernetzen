@@ -19,6 +19,8 @@ import edu.kit.informatik.model.IP;
  */
 
 public class Graph extends GraphFunction {
+    
+    private static final String ERROR_WRONG_NETWORK = "Error: Network creation null";
 
     private List<IP> nodes;
     private List<Edge> edges;
@@ -48,7 +50,7 @@ public class Graph extends GraphFunction {
     public Graph(IP root, List<IP> children) {
 
         if (root == null || children == null) {
-            throw new RuntimeException("Error: Network creation null");
+            throw new RuntimeException(ERROR_WRONG_NETWORK);
         }
         nodes = new ArrayList<>();
         edges = new ArrayList<>();
@@ -58,7 +60,7 @@ public class Graph extends GraphFunction {
         nodes.add(root);
         for (IP ip : children) {
             if (root.equals(ip) || !duplicate.add(ip)) {
-                throw new RuntimeException("Error: Network creation null");
+                throw new RuntimeException(ERROR_WRONG_NETWORK);
             }
             nodes.add(ip);
             edges.add(new Edge(root, ip));
