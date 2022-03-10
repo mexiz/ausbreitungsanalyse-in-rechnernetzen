@@ -13,8 +13,6 @@ import edu.kit.informatik.ParseException;
 
 public class IP implements Comparable<IP> {
 
-    private int[] adress;
-
     private static final int MAX_ADDRESS_BYTES = 4;
 
     private static final String REGEX_BYTE = "(((2[0-5][0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]\\d)|([0-9])))";
@@ -23,10 +21,12 @@ public class IP implements Comparable<IP> {
     private static final String ERROR_IP_INVALID = "Error: Invalid IP-Adress!";
 
     private static final String BYTE_SEPARATOR = ".";
-    
+
     private static final int COMPARE_SMALLER = -1;
     private static final int COMPARE_HIGHER = 1;
     private static final int COMPARE_EQUAL = 0;
+
+    private int[] adress;
 
     /**
      * Konstruktor mit der Pointnotation
