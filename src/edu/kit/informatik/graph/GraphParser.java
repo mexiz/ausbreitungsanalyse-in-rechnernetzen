@@ -21,19 +21,19 @@ import edu.kit.informatik.model.IP;
 
 public class GraphParser {
 
-    private static final String REGEX_BYTE = "(((2[0-5][0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]\\d)|([0-9])))";
-    private static final String REGEX_IP = "(" + REGEX_BYTE + "\\.){3}" + REGEX_BYTE;
+    private final static String REGEX_BYTE = "(((2[0-5][0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]\\d)|([0-9])))";
+    private final static String REGEX_IP = "(" + REGEX_BYTE + "\\.){3}" + REGEX_BYTE;
 
-    private static final String REGEX_BRACKET = "[(]" + REGEX_IP + "(" + "\\s" + REGEX_IP + ")+" + "[)]";
-    private static final String REGEX_BRACKET_NODES = "(" + REGEX_IP + "\\s)*" + REGEX_IP;
-    private static final String REGEX_START = "^([(]" + REGEX_IP + "\\s.+)";
+    private final static String REGEX_BRACKET = "[(]" + REGEX_IP + "(" + "\\s" + REGEX_IP + ")+" + "[)]";
+    private final static String REGEX_BRACKET_NODES = "(" + REGEX_IP + "\\s)*" + REGEX_IP;
+    private final static String REGEX_START = "^([(]" + REGEX_IP + "\\s.+)";
 
-    private static final String IP_SEPARATOR = " ";
+    private final static String IP_SEPARATOR = " ";
 
-    private static final int FIRST_ELEMENT = 0;
+    private final static int FIRST_ELEMENT = 0;
 
-    private static final String ERROR_BRACKETNOTATION = "Error: Wrong bracketnotation";
-    private static final String ERROR_TREE = "Error: Tree is circle";
+    private final static String ERROR_BRACKETNOTATION = "Error: Wrong bracketnotation";
+    private final static String ERROR_TREE = "Error: Tree is circle";
 
     /**
      * Die Methode wandelt den Baum, der als Bracketnotation dargestellt wird,

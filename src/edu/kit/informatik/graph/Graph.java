@@ -20,7 +20,7 @@ import edu.kit.informatik.model.IP;
 
 public class Graph extends GraphFunction {
     
-    private static final String ERROR_WRONG_NETWORK = "Error: Network creation null";
+    private final static String ERROR_WRONG_NETWORK = "Error: Network creation null";
 
     private List<IP> nodes;
     private List<Edge> edges;
