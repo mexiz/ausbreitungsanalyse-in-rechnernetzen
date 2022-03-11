@@ -191,7 +191,7 @@ public class Network {
     /**
      * Überprüft ob die Baumtopologie zwischen den Netzwerken gleich sind.(Isomorph)
      * 
-     * @param network Das zu vergleichende Netzwerk
+     * @param obj Das zu vergleichende Objekt
      * @return Ob die Netzwerke isomorph zueinander sind
      */
 
