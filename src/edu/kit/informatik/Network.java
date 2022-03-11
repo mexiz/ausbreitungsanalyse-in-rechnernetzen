@@ -188,4 +188,40 @@ public class Network {
         return graph.toBracketNotation(root, null);
     }
 
+    /**
+     * Überprüft ob die Baumtopologie zwischen den Netzwerken gleich sind.(Isomorph)
+     * 
+     * @param network Das zu vergleichende Netzwerk
+     * @return Ob die Netzwerke isomorph zueinander sind
+     */
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+
+        Network other = (Network) obj;
+
+        if (graph == null || other.graph == null) {
+            return false;
+        }
+
+        List<Integer> currentDegree = this.graph.getDegree();
+        List<Integer> networkDegree = other.getGraph().getDegree();
+
+        if (getGraph().getNodes().size() != other.getGraph().getNodes().size()) {
+            return false;
+        }
+
+        return currentDegree.containsAll(networkDegree) && networkDegree.containsAll(currentDegree);
+
+    }
+
 }

@@ -370,4 +370,24 @@ public class GraphFunction extends GraphParser {
         return children;
     }
 
+    /**
+     * Gibt eine Liste mit allen Graden (Ausgangsgrad und Eingangsgrad) der Knoten aus
+     * 
+     * @return Liste mit den Graden
+     */
+
+    public List<Integer> getDegree() {
+        Map<IP, Integer> degreeMap = new HashMap<>();
+
+        for (Edge edge : edges) {
+            IP sourceIP = edge.getSource();
+            int degree = degreeMap.containsKey(sourceIP) ? degreeMap.get(sourceIP) + 1 : 1;
+            degreeMap.put(sourceIP, degree);
+
+        }
+        List<Integer> allDegrees = new ArrayList<>(degreeMap.values());
+        Collections.sort(allDegrees);
+        return allDegrees;
+    }
+
 }
