@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import edu.kit.informatik.ParseException;
 import edu.kit.informatik.model.Edge;
 import edu.kit.informatik.model.IP;
 

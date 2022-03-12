@@ -1,4 +1,4 @@
-package edu.kit.informatik;
+package edu.kit.informatik.graph;
 
 /**
  * Exception für das einsetzen

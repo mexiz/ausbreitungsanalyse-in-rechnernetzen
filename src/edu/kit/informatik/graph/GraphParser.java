@@ -7,7 +7,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import edu.kit.informatik.ParseException;
 import edu.kit.informatik.model.Edge;
 import edu.kit.informatik.model.IP;
 
