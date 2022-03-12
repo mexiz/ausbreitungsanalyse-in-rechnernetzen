@@ -360,7 +360,6 @@ public class GraphFunction extends GraphParser {
 
     private List<Edge> getChildren(List<Edge> checkList, IP parent, IP prevIP) {
         List<Edge> children = new ArrayList<>();
-
         for (Edge edge : checkList) {
             if (edge.doSourceContain(parent) && !edge.doDestinationContain(prevIP)) {
                 children.add(edge);
